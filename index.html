@@ -47,6 +47,18 @@
         </div>
     </div>
 
+    <div id="text-toolbar" class="toolbar-hidden">
+        <button onmousedown="applyFormat('fontWeight', '900', event)">Heavy</button>
+        <button onmousedown="applyFormat('fontWeight', '700', event)">Bold</button>
+        <button onmousedown="applyFormat('fontWeight', '600', event)">Semi</button>
+        <button onmousedown="applyFormat('fontWeight', '400', event)">Reg</button>
+        <span class="divider">|</span>
+        <button onmousedown="applyFormat('fontStyle', 'italic', event)"><i>I</i></button>
+        <span class="divider">|</span>
+        <button onmousedown="applyFormat('textTransform', 'uppercase', event)">UPPER</button>
+        <button onmousedown="applyFormat('textTransform', 'capitalize', event)">Proper</button>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="script.js"></script>
