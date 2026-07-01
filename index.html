@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carousel Generator Pro</title>
+    <title>Carousel Maker Pro</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
     <link rel="stylesheet" href="style.css">
 </head>
@@ -14,11 +14,11 @@
         </header>
 
         <div id="input-screen" class="screen active">
-            <p class="subtitle">Desain Konten Anda</p>
+            <p class="subtitle">Masukkan teks mentah Anda di sini</p>
 
             <div class="upload-card">
                 <label for="bg-input" class="upload-label">
-                    <span id="upload-text">📸 Upload Gambar Seamless (Opsional)</span>
+                    <span id="upload-text"> Upload Gambar Seamless (Opsional)</span>
                 </label>
                 <input type="file" id="bg-input" accept="image/*" style="display: none;">
             </div>
@@ -26,11 +26,11 @@
             <div id="slide-inputs-container">
                 </div>
             
-            <button id="generate-btn" class="ios-btn primary">Generate Carousel</button>
+            <button id="generate-btn" class="ios-btn primary">Mulai Desain (Review)</button>
         </div>
 
         <div id="review-screen" class="screen">
-            <p class="subtitle">Geser untuk review transisi</p>
+            <p class="subtitle">Ketuk teks pada slide untuk mengubah gaya</p>
             
             <div class="carousel-wrapper">
                 <div class="swiper mySwiper">
@@ -40,23 +40,46 @@
                 </div>
             </div>
 
+            <div id="style-panel" class="hidden">
+                <div class="style-row">
+                    <div class="style-group">
+                        <label>Ukuran Teks</label>
+                        <div class="btn-group">
+                            <button id="btn-size-down">A-</button>
+                            <button id="btn-size-up">A+</button>
+                        </div>
+                    </div>
+                    <div class="style-group">
+                        <label>Jarak Baris</label>
+                        <div class="btn-group">
+                            <button id="btn-lh-down">↕-</button>
+                            <button id="btn-lh-up">↕+</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="style-row">
+                    <div class="style-group">
+                        <label>Ketebalan (Font)</label>
+                        <select id="select-weight" class="style-select">
+                            <option value="900">Heavy</option>
+                            <option value="700">Bold</option>
+                            <option value="600">Semi Bold</option>
+                            <option value="500">Medium</option>
+                            <option value="400">Regular</option>
+                        </select>
+                    </div>
+                    <div class="style-group">
+                        <label>Warna</label>
+                        <input type="color" id="input-color" value="#1C1C1E" class="color-picker">
+                    </div>
+                </div>
+            </div>
+
             <div class="action-buttons">
-                <button id="back-btn" class="ios-btn secondary">Edit Lagi</button>
+                <button id="back-btn" class="ios-btn secondary">Kembali</button>
                 <button id="download-btn" class="ios-btn primary">Download Semua</button>
             </div>
         </div>
-    </div>
-
-    <div id="text-toolbar" class="toolbar-hidden">
-        <button onmousedown="applyFormat('fontWeight', '900', event)">Heavy</button>
-        <button onmousedown="applyFormat('fontWeight', '700', event)">Bold</button>
-        <button onmousedown="applyFormat('fontWeight', '600', event)">Semi</button>
-        <button onmousedown="applyFormat('fontWeight', '400', event)">Reg</button>
-        <span class="divider">|</span>
-        <button onmousedown="applyFormat('fontStyle', 'italic', event)"><i>I</i></button>
-        <span class="divider">|</span>
-        <button onmousedown="applyFormat('textTransform', 'uppercase', event)">UPPER</button>
-        <button onmousedown="applyFormat('textTransform', 'capitalize', event)">Proper</button>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
