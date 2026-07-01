@@ -1,5 +1,8 @@
-/* Import Font Gilroy dari CDN Fonts */
+/* Import Font Gilroy lengkap dari CDN */
 @import url('https://fonts.cdnfonts.com/css/gilroy-bold');
+@import url('https://fonts.cdnfonts.com/css/gilroy-heavy');
+@import url('https://fonts.cdnfonts.com/css/gilroy-medium');
+@import url('https://fonts.cdnfonts.com/css/gilroy-regular');
 
 :root {
     --bg-color: #F2F2F7;
@@ -8,15 +11,14 @@
     --text-muted: #8E8E93;
     --blue-ios: #007AFF;
     --blue-ios-active: #005ecb;
-    --merah-bata: #C44D48; /* Tambahan warna merah bata */
+    --merah-bata: #C44D48;
 }
 
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    /* Menggunakan Gilroy sebagai font utama */
-    font-family: 'Gilroy', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-family: 'Gilroy', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 body {
@@ -25,6 +27,7 @@ body {
     display: flex;
     justify-content: center;
     padding: 20px;
+    position: relative;
 }
 
 .app-container {
@@ -34,7 +37,7 @@ body {
 
 header h1 {
     font-size: 28px;
-    font-weight: 800; /* Gilroy Heavy */
+    font-weight: 900;
     text-align: center;
     margin-bottom: 5px;
     margin-top: 20px;
@@ -45,16 +48,11 @@ header h1 {
     color: var(--text-muted);
     font-size: 14px;
     margin-bottom: 24px;
-    font-weight: 400; /* Gilroy Regular */
+    font-weight: 400;
 }
 
-.screen {
-    display: none;
-    animation: fadeIn 0.4s ease;
-}
-.screen.active {
-    display: block;
-}
+.screen { display: none; animation: fadeIn 0.4s ease; }
+.screen.active { display: block; }
 
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
@@ -70,14 +68,9 @@ header h1 {
     margin-bottom: 20px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
-.upload-label {
-    color: var(--blue-ios);
-    font-weight: 600; /* Gilroy SemiBold */
-    cursor: pointer;
-    display: block;
-}
+.upload-label { color: var(--blue-ios); font-weight: 700; cursor: pointer; display: block; }
 
-/* Kartu Input Teks */
+/* Kartu Input Teks (Menggunakan ContentEditable) */
 .slide-card {
     background-color: var(--card-bg);
     border-radius: 16px;
@@ -89,7 +82,7 @@ header h1 {
     font-size: 15px;
     color: var(--text-muted);
     margin-bottom: 12px;
-    font-weight: 600;
+    font-weight: 700;
 }
 .input-field {
     width: 100%;
@@ -101,23 +94,57 @@ header h1 {
     background-color: #FAFAFC;
     outline: none;
     font-weight: 400;
+    min-height: 46px;
+    line-height: 1.4;
 }
-.input-field:focus {
-    border-color: var(--blue-ios);
-}
-textarea.input-field {
-    height: 70px;
-    resize: none;
+.input-field:focus { border-color: var(--blue-ios); }
+.input-field.utama-input { min-height: 80px; }
+.input-field[placeholder]:empty:before {
+    content: attr(placeholder);
+    color: #A1A1A6;
+    pointer-events: none;
+    display: block;
 }
 
-/* Tombol */
+/* Tombol Floating Toolbar */
+#text-toolbar {
+    position: fixed;
+    background: #1C1C1E;
+    color: white;
+    padding: 6px 10px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    z-index: 1000;
+    transition: opacity 0.2s;
+}
+.toolbar-hidden {
+    opacity: 0;
+    pointer-events: none;
+    top: -100px;
+    left: -100px;
+}
+#text-toolbar button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 12px;
+    cursor: pointer;
+    padding: 4px;
+}
+#text-toolbar button:hover { color: var(--blue-ios); }
+#text-toolbar .divider { color: #555; }
+
+/* Tombol Aksi */
 .ios-btn {
     width: 100%;
     padding: 16px;
     border: none;
     border-radius: 14px;
     font-size: 17px;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
     margin-top: 10px;
     transition: all 0.2s;
@@ -126,16 +153,12 @@ textarea.input-field {
 .ios-btn.primary:active { background-color: var(--blue-ios-active); }
 .ios-btn.secondary { background-color: #E5E5EA; color: var(--blue-ios); }
 
-.action-buttons {
-    display: flex;
-    gap: 10px;
-    margin-top: 24px;
-}
+.action-buttons { display: flex; gap: 10px; margin-top: 24px; }
 
 /* Desain Slide Carousel */
 .carousel-wrapper {
     width: 100%;
-    aspect-ratio: 4 / 5; /* Rasio standar IG/Medsos */
+    aspect-ratio: 4 / 5;
     border-radius: 16px;
     overflow: hidden;
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
@@ -149,18 +172,17 @@ textarea.input-field {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    /* Memberikan Negative Space / White Space yang lega */
     padding: 50px 40px; 
     text-align: center;
     position: relative;
     box-shadow: inset 0 0 0 1000px rgba(255,255,255,0.75); 
 }
 
-/* Struktur Teks di dalam Slide (Desain Baru) */
+/* Struktur Teks di dalam Slide */
 .teks-utama {
-    font-size: 32px; /* Paling besar */
-    font-weight: 800; /* Gilroy Heavy */
-    line-height: 1.25;
+    font-size: 34px; 
+    font-weight: 900; 
+    line-height: 1.15; /* Jarak antar baris dirapatkan */
     color: var(--text-main);
     margin-bottom: 12px;
     z-index: 2;
@@ -168,20 +190,20 @@ textarea.input-field {
     word-wrap: break-word;
 }
 .teks-cta {
-    font-size: 18px; /* Lebih kecil dari utama */
-    font-weight: 600; /* Gilroy SemiBold */
-    color: var(--merah-bata); /* Warna Merah Bata */
+    font-size: 18px; 
+    font-weight: 600; 
+    color: var(--merah-bata); 
     margin-bottom: 15px;
     z-index: 2;
     width: 100%;
 }
 .teks-bawah {
     position: absolute;
-    bottom: 35px; /* Jarak dari batas bawah (white space) */
-    left: 40px; /* Menjaga batas kiri */
-    right: 40px; /* Menjaga batas kanan */
-    font-size: 13px; /* Paling kecil */
-    font-weight: 400; /* Gilroy Regular/Light */
+    bottom: 35px; 
+    left: 40px; 
+    right: 40px; 
+    font-size: 13px; 
+    font-weight: 400; 
     color: var(--text-muted);
     z-index: 2;
 }
