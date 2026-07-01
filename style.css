@@ -1,0 +1,133 @@
+/* Pengaturan dasar gaya iOS */
+:root {
+    --bg-color: #F2F2F7;
+    --card-bg: #FFFFFF;
+    --text-main: #1C1C1E;
+    --text-muted: #8E8E93;
+    --blue-ios: #007AFF;
+    --blue-ios-active: #005ecb;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.app-container {
+    width: 100%;
+    max-width: 420px; /* Ukuran pas untuk layar HP */
+}
+
+header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 5px;
+    margin-top: 20px;
+}
+
+.subtitle {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-bottom: 24px;
+}
+
+/* Sistem Layar (Sembunyikan layar yang tidak aktif) */
+.screen {
+    display: none;
+    animation: fadeIn 0.4s ease;
+}
+.screen.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Kotak Input Teks */
+.input-group {
+    margin-bottom: 12px;
+}
+
+textarea {
+    width: 100%;
+    height: 80px;
+    border: none;
+    border-radius: 12px;
+    padding: 16px;
+    font-size: 15px;
+    background-color: var(--card-bg);
+    resize: none;
+    outline: none;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+/* Tombol Bergaya iOS */
+.ios-btn {
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 14px;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: all 0.2s;
+}
+
+.ios-btn.primary {
+    background-color: var(--blue-ios);
+    color: white;
+}
+.ios-btn.primary:active {
+    background-color: var(--blue-ios-active);
+}
+
+.ios-btn.secondary {
+    background-color: #E5E5EA;
+    color: var(--blue-ios);
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 24px;
+}
+
+/* Desain Desain Slide (Rasio 4:5 Instagram) */
+.carousel-wrapper {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.swiper {
+    width: 100%;
+    height: 100%;
+}
+
+.swiper-slide {
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 500;
+}
