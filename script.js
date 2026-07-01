@@ -30,9 +30,9 @@ for (let i = 1; i <= 5; i++) {
     card.className = 'slide-card';
     card.innerHTML = `
         <h3>Slide ${i}</h3>
-        <textarea id="utama${i}" class="input-field" placeholder="Teks Utama..."></textarea>
-        <input type="text" id="cta${i}" class="input-field" placeholder="Teks CTA (Sorotan)...">
-        <input type="text" id="bawah${i}" class="input-field" placeholder="Teks Bawah/Kecil...">
+        <textarea id="utama${i}" class="input-field" placeholder="Teks Utama (Huruf Besar, Heavy)..."></textarea>
+        <input type="text" id="cta${i}" class="input-field" placeholder="Teks Sorotan (Merah Bata, SemiBold)...">
+        <input type="text" id="bawah${i}" class="input-field" placeholder="Teks Bawah (Kecil, Regular)...">
     `;
     slideInputsContainer.appendChild(card);
 }
@@ -79,9 +79,13 @@ generateBtn.addEventListener('click', () => {
         }
 
         // Memasukkan struktur teks
-        let contentHTML = '';
+        let contentHTML = '<div style="flex: 1; display: flex; flex-direction: column; justify-content: center; width: 100%;">';
+        
         if(data.utama) contentHTML += `<div class="teks-utama">${data.utama.replace(/\n/g, '<br>')}</div>`;
         if(data.cta) contentHTML += `<div class="teks-cta">${data.cta}</div>`;
+        
+        contentHTML += '</div>'; // Tutup wrapper tengah
+        
         if(data.bawah) contentHTML += `<div class="teks-bawah">${data.bawah}</div>`;
         
         slide.innerHTML = contentHTML;
