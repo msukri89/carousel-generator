@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carousel Generator</title>
+    <title>Carousel Generator Pro</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
     <link rel="stylesheet" href="style.css">
 </head>
@@ -14,12 +14,17 @@
         </header>
 
         <div id="input-screen" class="screen active">
-            <p class="subtitle">Masukkan teks untuk 5 slide Anda</p>
-            <div class="input-group"><textarea id="text1" placeholder="Isi teks slide 1..."></textarea></div>
-            <div class="input-group"><textarea id="text2" placeholder="Isi teks slide 2..."></textarea></div>
-            <div class="input-group"><textarea id="text3" placeholder="Isi teks slide 3..."></textarea></div>
-            <div class="input-group"><textarea id="text4" placeholder="Isi teks slide 4..."></textarea></div>
-            <div class="input-group"><textarea id="text5" placeholder="Isi teks slide 5..."></textarea></div>
+            <p class="subtitle">Desain Konten Anda</p>
+
+            <div class="upload-card">
+                <label for="bg-input" class="upload-label">
+                    <span id="upload-text">📸 Upload Gambar Seamless (Opsional)</span>
+                </label>
+                <input type="file" id="bg-input" accept="image/*" style="display: none;">
+            </div>
+
+            <div id="slide-inputs-container">
+                </div>
             
             <button id="generate-btn" class="ios-btn primary">Generate Carousel</button>
         </div>
@@ -36,13 +41,14 @@
             </div>
 
             <div class="action-buttons">
-                <button id="back-btn" class="ios-btn secondary">Edit Teks</button>
-                <button id="download-btn" class="ios-btn primary">Download (Segera)</button>
+                <button id="back-btn" class="ios-btn secondary">Edit Lagi</button>
+                <button id="download-btn" class="ios-btn primary">Download Semua</button>
             </div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
