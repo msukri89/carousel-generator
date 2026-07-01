@@ -4,7 +4,8 @@
     --text-main: #1C1C1E;
     --text-muted: #8E8E93;
     --blue-ios: #007AFF;
-    --blue-ios-active: #005ecb;
+    /* Warna baru untuk CTA */
+    --cta-red: #B22222; 
 }
 
 * {
@@ -27,110 +28,13 @@ body {
     max-width: 420px;
 }
 
-header h1 {
-    font-size: 28px;
-    font-weight: 700;
-    text-align: center;
-    margin-bottom: 5px;
-    margin-top: 20px;
-}
-
-.subtitle {
-    text-align: center;
-    color: var(--text-muted);
-    font-size: 14px;
-    margin-bottom: 24px;
-}
-
-.screen {
-    display: none;
-    animation: fadeIn 0.4s ease;
-}
-.screen.active {
-    display: block;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* Upload Gambar */
-.upload-card {
-    background-color: var(--card-bg);
-    border-radius: 12px;
-    padding: 15px;
-    text-align: center;
-    margin-bottom: 20px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-}
-.upload-label {
-    color: var(--blue-ios);
-    font-weight: 600;
-    cursor: pointer;
-    display: block;
-}
-
-/* Kartu Input Teks */
-.slide-card {
-    background-color: var(--card-bg);
-    border-radius: 16px;
-    padding: 16px;
-    margin-bottom: 16px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-}
-.slide-card h3 {
-    font-size: 15px;
-    color: var(--text-muted);
-    margin-bottom: 12px;
-}
-.input-field {
-    width: 100%;
-    border: 1px solid #E5E5EA;
-    border-radius: 8px;
-    padding: 12px;
-    font-size: 15px;
-    margin-bottom: 10px;
-    background-color: #FAFAFC;
-    outline: none;
-}
-.input-field:focus {
-    border-color: var(--blue-ios);
-}
-textarea.input-field {
-    height: 70px;
-    resize: none;
-}
-
-/* Tombol */
-.ios-btn {
-    width: 100%;
-    padding: 16px;
-    border: none;
-    border-radius: 14px;
-    font-size: 17px;
-    font-weight: 600;
-    cursor: pointer;
-    margin-top: 10px;
-    transition: all 0.2s;
-}
-.ios-btn.primary { background-color: var(--blue-ios); color: white; }
-.ios-btn.primary:active { background-color: var(--blue-ios-active); }
-.ios-btn.secondary { background-color: #E5E5EA; color: var(--blue-ios); }
-
-.action-buttons {
-    display: flex;
-    gap: 10px;
-    margin-top: 24px;
-}
-
-/* Desain Slide Carousel */
+/* --- DESAIN SLIDE CAROUSEL (DIPERBAIKI) --- */
 .carousel-wrapper {
     width: 100%;
     aspect-ratio: 4 / 5;
-    border-radius: 16px;
+    border-radius: 24px; /* Sudut lebih elegan ala iOS */
     overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
 }
 
 .swiper { width: 100%; height: 100%; }
@@ -141,34 +45,44 @@ textarea.input-field {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 30px;
+    /* Menambah Whitespace (padding) agar teks tidak mepet */
+    padding: 40px 30px; 
     text-align: center;
     position: relative;
-    /* Lapisan gelap transparan agar teks terbaca jika ada gambar */
-    box-shadow: inset 0 0 0 1000px rgba(255,255,255,0.75); 
+    box-shadow: inset 0 0 0 1000px rgba(255,255,255,0.85);
 }
 
-/* Struktur Teks di dalam Slide */
+/* HIERARKI TIPOGRAFI BARU */
 .teks-utama {
-    font-size: 22px;
-    font-weight: 700;
-    line-height: 1.4;
+    font-size: 26px;      /* Ukuran paling besar */
+    font-weight: 900;     /* Heavy/Black */
+    line-height: 1.2;
     color: var(--text-main);
-    margin-bottom: 15px;
+    margin-bottom: 24px;  /* Memberi ruang napas */
     z-index: 2;
 }
+
 .teks-cta {
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--blue-ios);
-    margin-bottom: 15px;
+    font-size: 18px;      /* Lebih kecil dari utama */
+    font-weight: 600;     /* Semi Bold */
+    color: var(--cta-red); /* Merah Bata */
+    margin-bottom: 20px;
     z-index: 2;
+    line-height: 1.4;
 }
+
 .teks-bawah {
     position: absolute;
-    bottom: 25px;
-    font-size: 13px;
-    font-weight: 500;
+    bottom: 30px;         /* Whitespace bawah */
+    font-size: 12px;      /* Paling kecil */
+    font-weight: 300;     /* Light */
     color: var(--text-muted);
     z-index: 2;
+    letter-spacing: 0.5px;
 }
+
+/* Sisanya tetap sama untuk input dan lainnya */
+.slide-card { background-color: var(--card-bg); border-radius: 16px; padding: 16px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+.input-field { width: 100%; border: 1px solid #E5E5EA; border-radius: 8px; padding: 12px; font-size: 15px; margin-bottom: 10px; background-color: #FAFAFC; }
+.ios-btn { width: 100%; padding: 16px; border: none; border-radius: 14px; font-size: 17px; font-weight: 600; cursor: pointer; }
+.ios-btn.primary { background-color: var(--blue-ios); color: white; }
