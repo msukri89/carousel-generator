@@ -101,13 +101,12 @@ textarea.input-field { height: 70px; resize: none; }
     justify-content: center;
     padding: 50px 40px; 
     text-align: center;
-    position: relative;
 }
 .slide-bg-overlay {
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
-    box-shadow: inset 0 0 0 1000px rgba(255,255,255,0.75);
     z-index: 1;
+    /* Dihapus box shadow lama, di-handle JS dengan background-color */
 }
 
 /* Teks yang bisa diedit */
@@ -115,10 +114,11 @@ textarea.input-field { height: 70px; resize: none; }
     z-index: 2;
     width: 100%;
     word-wrap: break-word;
-    outline: none; /* Hilangkan outline default HP */
+    outline: none;
     transition: box-shadow 0.2s;
     border-radius: 8px;
     padding: 4px;
+    font-family: 'Gilroy', -apple-system, BlinkMacSystemFont, sans-serif !important; /* Paksa Gilroy Terbaca Saat Render Canvas */
 }
 .editable-text.active-edit {
     box-shadow: 0 0 0 2px var(--blue-ios);
@@ -126,9 +126,19 @@ textarea.input-field { height: 70px; resize: none; }
 }
 
 /* Default Styles untuk Text Box */
-.teks-utama { font-size: 34px; font-weight: 900; line-height: 1.15; color: var(--text-main); margin-bottom: 12px; }
-.teks-cta { font-size: 18px; font-weight: 600; color: var(--merah-bata); margin-bottom: 15px; }
-.teks-bawah { position: absolute; bottom: 35px; left: 40px; right: 40px; font-size: 13px; font-weight: 500; color: var(--text-muted); }
+.teks-utama { font-size: 34px; font-weight: 900; line-height: 1.15; color: var(--text-main); margin-bottom: 12px; text-align: center; }
+.teks-cta { font-size: 18px; font-weight: 600; color: var(--merah-bata); margin-bottom: 15px; text-align: center; }
+.teks-bawah { 
+    position: absolute; 
+    bottom: 35px; 
+    left: 40px; 
+    right: 40px; 
+    font-size: 13px; 
+    font-weight: 500; 
+    color: var(--text-muted);
+    text-align: center; /* Solusi agar Teks Kecil Berada Presisi di Tengah */
+    z-index: 2;
+}
 
 /* Panel Kontrol Style */
 #style-panel {
