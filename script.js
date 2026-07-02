@@ -113,13 +113,20 @@ generateBtn.addEventListener('click', () => {
         
         slide.appendChild(centerWrapper);
         
-        if(data.bawah) {
+     if(data.bawah) {
             const bawahEl = document.createElement('div');
             bawahEl.className = 'teks-bawah editable-text swiper-no-swiping';
             bawahEl.contentEditable = "true";
             bawahEl.innerHTML = data.bawah;
+            
+            // FIX: Memaksa index tumpukan (z-index) lebih tinggi 
+            // agar html2canvas me-render teks ini di atas background
+            bawahEl.style.position = 'absolute';
+            bawahEl.style.zIndex = '999'; 
+            
             slide.appendChild(bawahEl);
         }
+
         
         carouselContent.appendChild(slide);
     });
