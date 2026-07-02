@@ -210,6 +210,19 @@ document.getElementById('btn-align-right').addEventListener('click', () => {
     activeEl.style.textAlign = 'right';
 });
 
+// === KONTROL UKURAN CAROUSEL (ASPECT RATIO) ===
+document.getElementById('select-ratio').addEventListener('change', (e) => {
+    const wrapper = document.querySelector('.carousel-wrapper');
+    wrapper.style.aspectRatio = e.target.value;
+    
+    // Memaksa Swiper untuk menghitung ulang dimensi setelah canvas berubah
+    if (swiperInstance) {
+        setTimeout(() => {
+            swiperInstance.update();
+        }, 150);
+    }
+});
+
 // KEMBALI
 backBtn.addEventListener('click', () => {
     if (activeEl) activeEl.classList.remove('active-edit');
