@@ -1,4 +1,4 @@
-const CACHE_NAME = 'carousel-maker-v2';
+const CACHE_NAME = 'carousel-maker-v3';
 const urlsToCache = [
   './',
   './index.html',
