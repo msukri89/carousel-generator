@@ -1,7 +1,7 @@
-@import url('https://font.download/font/gilroy-bold');
-@import url('https://font.download/font/gilroy-bold');
-@import url('https://font.download/font/gilroy-bold');
-@import url('https://font.download/font/gilroy-bold');
+@import url('https://fonts.cdnfonts.com/css/gilroy-bold');
+@import url('https://fonts.cdnfonts.com/css/gilroy-heavy');
+@import url('https://fonts.cdnfonts.com/css/gilroy-medium');
+@import url('https://fonts.cdnfonts.com/css/gilroy-regular');
 
 :root {
     --bg-color: #F2F2F7;
@@ -17,7 +17,8 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: 'Gilroy-Bold ☞';
+    /* Ubah ini ke standar nama font yang sah dari impor CDNFonts */
+    font-family: 'Gilroy', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 body {
@@ -106,7 +107,6 @@ textarea.input-field { height: 70px; resize: none; }
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
     z-index: 1;
-    /* Dihapus box shadow lama, di-handle JS dengan background-color */
 }
 
 /* Teks yang bisa diedit */
@@ -118,7 +118,8 @@ textarea.input-field { height: 70px; resize: none; }
     transition: box-shadow 0.2s;
     border-radius: 8px;
     padding: 4px;
-    font-family: '', -apple-system, BlinkMacSystemFont, sans-serif !important; /* Paksa Gilroy Terbaca Saat Render Canvas */
+    /* Tambahkan Gilroy sebagai prioritas render di canvas */
+    font-family: 'Gilroy', -apple-system, BlinkMacSystemFont, sans-serif !important; 
 }
 .editable-text.active-edit {
     box-shadow: 0 0 0 2px var(--blue-ios);
@@ -136,7 +137,7 @@ textarea.input-field { height: 70px; resize: none; }
     font-size: 13px; 
     font-weight: 500; 
     color: var(--text-muted);
-    text-align: center; /* Solusi agar Teks Kecil Berada Presisi di Tengah */
+    text-align: center; 
     z-index: 2;
 }
 
@@ -159,7 +160,7 @@ textarea.input-field { height: 70px; resize: none; }
 .btn-group button { flex: 1; padding: 8px; border: none; background: #FAFAFC; font-weight: 700; color: var(--text-main); cursor: pointer; border-right: 1px solid #E5E5EA; }
 .btn-group button:last-child { border-right: none; }
 .btn-group button:active { background: #E5E5EA; }
-.style-select { padding: 8px; border-radius: 8px; border: 1px solid #E5E5EA; background: #FAFAFC; font-family: 'Gilroy-Bold ☞'; font-weight: 600; outline: none; }
+.style-select { padding: 8px; border-radius: 8px; border: 1px solid #E5E5EA; background: #FAFAFC; font-family: 'Gilroy'; font-weight: 600; outline: none; }
 .color-picker { width: 100%; height: 36px; border: none; border-radius: 8px; cursor: pointer; background: transparent; }
 
 /* Buttons */
