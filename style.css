@@ -129,7 +129,17 @@ textarea.input-field { height: 70px; resize: none; }
 /* Default Styles untuk Text Box */
 .teks-utama { font-size: 34px; font-weight: 900; line-height: 1.15; color: var(--text-main); margin-bottom: 12px; text-align: center; }
 .teks-cta { font-size: 18px; font-weight: 600; color: var(--merah-bata); margin-bottom: 15px; text-align: center; }
-.teks-bawah { font-size: 13px; font-weight: 500; color: var(--text-muted); margin-bottom: 35px; text-align: center; }
+.teks-bawah { 
+    position: absolute; 
+    bottom: 35px; 
+    left: 40px; 
+    right: 40px; 
+    font-size: 13px; 
+    font-weight: 500; 
+    color: var(--text-muted); 
+    text-align: center; 
+    z-index: 999; /* Z-index tinggi agar tidak tertutup background saat di-download */
+}
 
 /* Panel Kontrol Style */
 #style-panel {
