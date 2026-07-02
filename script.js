@@ -119,11 +119,18 @@ generateBtn.addEventListener('click', () => {
             bawahEl.contentEditable = "true";
             bawahEl.innerHTML = data.bawah;
             
-            // FIX: Memaksa index tumpukan (z-index) lebih tinggi 
-            // agar html2canvas me-render teks ini di atas background
+            // pastikan positioned relatif terhadap slide dan styling eksplisit agar selalu center
             bawahEl.style.position = 'absolute';
-            bawahEl.style.zIndex = '999'; 
-            
+            bawahEl.style.zIndex = '999';
+            bawahEl.style.left = '40px';
+            bawahEl.style.right = '40px';
+            bawahEl.style.bottom = '35px';
+            bawahEl.style.boxSizing = 'border-box';
+            bawahEl.style.maxWidth = 'calc(100% - 80px)';
+            bawahEl.style.textAlign = 'center';
+            bawahEl.style.margin = '0 auto';
+            bawahEl.style.wordWrap = 'break-word';
+
             slide.appendChild(bawahEl);
         }
 
@@ -251,6 +258,13 @@ downloadBtn.addEventListener('click', async () => {
     for(let i = 0; i < slides.length; i++) {
         swiperInstance.slideTo(i, 0); 
         await new Promise(r => setTimeout(r, 400)); 
+        
+        // Hilangkan selection dan blur elemen aktif agar handle teks tidak ter-render
+        if (window.getSelection) {
+          const sel = window.getSelection();
+          if (sel && sel.rangeCount) sel.removeAllRanges();
+        }
+        if (document.activeElement) document.activeElement.blur();
         
         const canvas = await html2canvas(slides[i], { 
             scale: 2, 
