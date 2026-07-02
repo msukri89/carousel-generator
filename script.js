@@ -11,7 +11,7 @@ const stylePanel = document.getElementById('style-panel');
 
 let swiperInstance = null;
 let bgImageUrl = '';
-let activeEl = null; // Menyimpan elemen teks yang sedang diedit
+let activeEl = null; 
 
 // Upload Gambar Seamless
 bgInput.addEventListener('change', function(e) {
@@ -44,7 +44,6 @@ generateBtn.addEventListener('click', () => {
     carouselContent.innerHTML = '';
     let activeSlidesData = [];
 
-    // Ambil nilai dari layar input
     for (let i = 1; i <= 5; i++) {
         const utama = document.getElementById(`utama${i}`).value.trim();
         const cta = document.getElementById(`cta${i}`).value.trim();
@@ -66,28 +65,37 @@ generateBtn.addEventListener('click', () => {
     activeSlidesData.forEach((data, index) => {
         const slide = document.createElement('div');
         slide.className = 'swiper-slide';
+        // Penting untuk memastikan elemen di dalam (layer absolute) tidak tembus keluar
+        slide.style.position = 'relative';
+        slide.style.overflow = 'hidden'; 
 
-        // Latar Belakang Seamless
+        // Latar Belakang Seamless menggunakan Layering agar html2canvas memotong secara presisi
         if (bgImageUrl !== '') {
-            slide.style.backgroundImage = `url(${bgImageUrl})`;
-            slide.style.backgroundSize = `${totalSlides * 100}% 100%`;
-            let positionX = totalSlides > 1 ? (index * (100 / (totalSlides - 1))) : 0;
-            slide.style.backgroundPosition = `${positionX}% center`;
+            const bgLayer = document.createElement('div');
+            bgLayer.style.position = 'absolute';
+            bgLayer.style.top = '0';
+            // Geser gambar sesuai indeks slide agar menyambung
+            bgLayer.style.left = `-${index * 100}%`; 
+            bgLayer.style.width = `${totalSlides * 100}%`;
+            bgLayer.style.height = '100%';
+            bgLayer.style.backgroundImage = `url(${bgImageUrl})`;
+            bgLayer.style.backgroundSize = '100% 100%';
+            bgLayer.style.zIndex = '0';
+            slide.appendChild(bgLayer);
             
-            // Tambahkan overlay putih transparan agar teks terbaca
+            // Overlay transparan pakai background-color (BUKAN box-shadow karena html2canvas sering error dengan inset shadow)
             const overlay = document.createElement('div');
             overlay.className = 'slide-bg-overlay';
+            overlay.style.backgroundColor = 'rgba(255, 255, 255, 0.75)';
             slide.appendChild(overlay);
         } else {
-            // Jika tidak ada gambar, pasang overlay default agar style aman
-            slide.style.boxShadow = 'inset 0 0 0 1000px rgba(255,255,255,1)';
+            slide.style.backgroundColor = '#FFFFFF';
         }
 
         // Kontainer tengah
         const centerWrapper = document.createElement('div');
-        centerWrapper.style.cssText = 'flex: 1; display: flex; flex-direction: column; justify-content: center; width: 100%; z-index: 2;';
+        centerWrapper.style.cssText = 'flex: 1; display: flex; flex-direction: column; justify-content: center; width: 100%; z-index: 2; position: relative;';
 
-        // Kita ubah teks menjadi <div contenteditable="true"> agar bisa di-klik dan diedit
         if(data.utama) centerWrapper.innerHTML += `<div class="teks-utama editable-text swiper-no-swiping" contenteditable="true">${data.utama.replace(/\n/g, '<br>')}</div>`;
         if(data.cta) centerWrapper.innerHTML += `<div class="teks-cta editable-text swiper-no-swiping" contenteditable="true">${data.cta}</div>`;
         
@@ -112,36 +120,29 @@ generateBtn.addEventListener('click', () => {
         effect: "slide",
         grabCursor: true,
         pagination: { el: ".swiper-pagination", dynamicBullets: true },
-        // Mencegah slide tergeser saat kita sedang blok teks (karena kita pakai swiper-no-swiping)
         noSwiping: true,
         noSwipingClass: 'swiper-no-swiping'
     });
 });
 
-// === LOGIKA EDITOR CANVAS ===
+// LOGIKA EDITOR CANVAS
 carouselContent.addEventListener('click', (e) => {
-    // Cek apakah yang diklik adalah teks yang bisa diedit
     if (e.target.classList.contains('editable-text')) {
-        // Hapus penanda aktif dari elemen sebelumnya
         if (activeEl) activeEl.classList.remove('active-edit');
         
-        // Jadikan elemen yang diklik sebagai elemen aktif
         activeEl = e.target;
         activeEl.classList.add('active-edit');
         stylePanel.classList.remove('hidden');
 
-        // Sinkronkan panel dengan style elemen saat ini
         const computedStyle = window.getComputedStyle(activeEl);
         document.getElementById('select-weight').value = computedStyle.fontWeight;
         
-        // Convert RGB to HEX untuk input color
         const rgb = computedStyle.color.match(/\d+/g);
         if(rgb) {
             const hex = `#${((1 << 24) + (+rgb[0] << 16) + (+rgb[1] << 8) + +rgb[2]).toString(16).slice(1)}`;
             document.getElementById('input-color').value = hex;
         }
     } else {
-        // Jika klik di luar teks, sembunyikan panel
         if (activeEl) activeEl.classList.remove('active-edit');
         activeEl = null;
         stylePanel.classList.add('hidden');
@@ -182,8 +183,22 @@ document.getElementById('input-color').addEventListener('input', (e) => {
     if(!activeEl) return;
     activeEl.style.color = e.target.value;
 });
-// ===========================
 
+// ALIGNMENT KONTROL
+document.getElementById('btn-align-left').addEventListener('click', () => {
+    if(!activeEl) return;
+    activeEl.style.textAlign = 'left';
+});
+document.getElementById('btn-align-center').addEventListener('click', () => {
+    if(!activeEl) return;
+    activeEl.style.textAlign = 'center';
+});
+document.getElementById('btn-align-right').addEventListener('click', () => {
+    if(!activeEl) return;
+    activeEl.style.textAlign = 'right';
+});
+
+// KEMBALI
 backBtn.addEventListener('click', () => {
     if (activeEl) activeEl.classList.remove('active-edit');
     stylePanel.classList.add('hidden');
@@ -191,9 +206,8 @@ backBtn.addEventListener('click', () => {
     inputScreen.classList.add('active');
 });
 
-// Fitur DOWNLOAD
+// DOWNLOAD
 downloadBtn.addEventListener('click', async () => {
-    // Sembunyikan garis seleksi sebelum difoto!
     if (activeEl) activeEl.classList.remove('active-edit');
     stylePanel.classList.add('hidden');
 
@@ -204,9 +218,14 @@ downloadBtn.addEventListener('click', async () => {
     
     for(let i = 0; i < slides.length; i++) {
         swiperInstance.slideTo(i, 0); 
-        await new Promise(r => setTimeout(r, 400)); // Jeda sedikit lebih lama agar transisi selesai
+        await new Promise(r => setTimeout(r, 400)); 
         
-        const canvas = await html2canvas(slides[i], { scale: 2, useCORS: true });
+        const canvas = await html2canvas(slides[i], { 
+            scale: 2, 
+            useCORS: true, 
+            backgroundColor: null // Membiarkan background render native
+        });
+        
         const link = document.createElement('a');
         link.download = `Slide_Konten_${i+1}.png`;
         link.href = canvas.toDataURL('image/png');
