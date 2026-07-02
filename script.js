@@ -5,6 +5,7 @@ const backBtn = document.getElementById('back-btn');
 const downloadBtn = document.getElementById('download-btn');
 const carouselContent = document.getElementById('carousel-content');
 const slideInputsContainer = document.getElementById('slide-inputs-container');
+const addSlideBtn = document.getElementById('add-slide-btn');
 const bgInput = document.getElementById('bg-input');
 const uploadText = document.getElementById('upload-text');
 const stylePanel = document.getElementById('style-panel');
@@ -12,6 +13,7 @@ const stylePanel = document.getElementById('style-panel');
 let swiperInstance = null;
 let bgImageUrl = '';
 let activeEl = null; 
+let totalInputCards = 0; // Menghitung total panel input yang ada
 
 // Upload Gambar Seamless
 bgInput.addEventListener('change', function(e) {
@@ -26,25 +28,37 @@ bgInput.addEventListener('change', function(e) {
     }
 });
 
-// Otomatis membuat 5 Kartu Input
-for (let i = 1; i <= 5; i++) {
+// Fungsi untuk membuat elemen form slide baru
+function createSlideInput() {
+    totalInputCards++;
     const card = document.createElement('div');
     card.className = 'slide-card';
     card.innerHTML = `
-        <h3>Slide ${i}</h3>
-        <textarea id="utama${i}" class="input-field" placeholder="Teks Utama..."></textarea>
-        <input type="text" id="cta${i}" class="input-field" placeholder="Teks Sorotan (CTA)...">
-        <input type="text" id="bawah${i}" class="input-field" placeholder="Teks Bawah/Kecil...">
+        <h3>Slide ${totalInputCards}</h3>
+        <textarea id="utama${totalInputCards}" class="input-field" placeholder="Teks Utama..."></textarea>
+        <input type="text" id="cta${totalInputCards}" class="input-field" placeholder="Teks Sorotan (CTA)...">
+        <input type="text" id="bawah${totalInputCards}" class="input-field" placeholder="Teks Bawah/Kecil...">
     `;
     slideInputsContainer.appendChild(card);
 }
+
+// Otomatis membuat 5 Kartu Input pertama kali
+for (let i = 0; i < 5; i++) {
+    createSlideInput();
+}
+
+// Event untuk tombol tambah slide
+addSlideBtn.addEventListener('click', () => {
+    createSlideInput();
+});
 
 // Generate Ditekan
 generateBtn.addEventListener('click', () => {
     carouselContent.innerHTML = '';
     let activeSlidesData = [];
 
-    for (let i = 1; i <= 5; i++) {
+    // Looping berdasarkan jumlah panel input yang telah di-generate
+    for (let i = 1; i <= totalInputCards; i++) {
         const utama = document.getElementById(`utama${i}`).value.trim();
         const cta = document.getElementById(`cta${i}`).value.trim();
         const bawah = document.getElementById(`bawah${i}`).value.trim();
@@ -65,16 +79,14 @@ generateBtn.addEventListener('click', () => {
     activeSlidesData.forEach((data, index) => {
         const slide = document.createElement('div');
         slide.className = 'swiper-slide';
-        // Penting untuk memastikan elemen di dalam (layer absolute) tidak tembus keluar
         slide.style.position = 'relative';
         slide.style.overflow = 'hidden'; 
 
-        // Latar Belakang Seamless menggunakan Layering agar html2canvas memotong secara presisi
+        // Latar Belakang Seamless menggunakan Layering agar html2canvas presisi
         if (bgImageUrl !== '') {
             const bgLayer = document.createElement('div');
             bgLayer.style.position = 'absolute';
             bgLayer.style.top = '0';
-            // Geser gambar sesuai indeks slide agar menyambung
             bgLayer.style.left = `-${index * 100}%`; 
             bgLayer.style.width = `${totalSlides * 100}%`;
             bgLayer.style.height = '100%';
@@ -83,10 +95,10 @@ generateBtn.addEventListener('click', () => {
             bgLayer.style.zIndex = '0';
             slide.appendChild(bgLayer);
             
-            // Overlay transparan pakai background-color (BUKAN box-shadow karena html2canvas sering error dengan inset shadow)
+            // Overlay diturunkan ke 0 agar warna gambar sama dengan aslinya (berdasarkan perbaikan sebelumnya)
             const overlay = document.createElement('div');
             overlay.className = 'slide-bg-overlay';
-            overlay.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+            overlay.style.backgroundColor = 'rgba(255, 255, 255, 0)'; 
             slide.appendChild(overlay);
         } else {
             slide.style.backgroundColor = '#FFFFFF';
@@ -223,7 +235,7 @@ downloadBtn.addEventListener('click', async () => {
         const canvas = await html2canvas(slides[i], { 
             scale: 2, 
             useCORS: true, 
-            backgroundColor: null // Membiarkan background render native
+            backgroundColor: null
         });
         
         const link = document.createElement('a');
