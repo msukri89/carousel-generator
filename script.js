@@ -86,7 +86,7 @@ generateBtn.addEventListener('click', () => {
             // Overlay transparan pakai background-color (BUKAN box-shadow karena html2canvas sering error dengan inset shadow)
             const overlay = document.createElement('div');
             overlay.className = 'slide-bg-overlay';
-            overlay.style.backgroundColor = 'rgba(255, 255, 255, 0.75)';
+            overlay.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
             slide.appendChild(overlay);
         } else {
             slide.style.backgroundColor = '#FFFFFF';
