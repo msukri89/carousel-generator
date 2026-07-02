@@ -1,7 +1,31 @@
-@import url('https://fonts.cdnfonts.com/css/gilroy-bold');
-@import url('https://fonts.cdnfonts.com/css/gilroy-heavy');
-@import url('https://fonts.cdnfonts.com/css/gilroy-medium');
-@import url('https://fonts.cdnfonts.com/css/gilroy-regular');
+/* Memanggil font secara lokal dari folder "fonts" */
+@font-face {
+    font-family: 'Gilroy';
+    src: url('fonts/Gilroy-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Gilroy';
+    src: url('fonts/Gilroy-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Gilroy';
+    src: url('fonts/Gilroy-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Gilroy';
+    src: url('fonts/Gilroy-Heavy.ttf') format('truetype');
+    font-weight: 900;
+    font-style: normal;
+}
 
 :root {
     --bg-color: #F2F2F7;
@@ -17,7 +41,7 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    /* Ubah ini ke standar nama font yang sah dari impor CDNFonts */
+    /* Memanggil font Gilroy yang sudah didaftarkan di atas */
     font-family: 'Gilroy', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
@@ -95,6 +119,7 @@ textarea.input-field { height: 70px; resize: none; }
 }
 .swiper { width: 100%; height: 100%; }
 .swiper-slide {
+    position: relative; /* Wajib agar elemen absolute di dalamnya tidak berantakan */
     background-color: transparent;
     display: flex;
     flex-direction: column;
@@ -118,7 +143,6 @@ textarea.input-field { height: 70px; resize: none; }
     transition: box-shadow 0.2s;
     border-radius: 8px;
     padding: 4px;
-    /* Tambahkan Gilroy sebagai prioritas render di canvas */
     font-family: 'Gilroy', -apple-system, BlinkMacSystemFont, sans-serif !important; 
 }
 .editable-text.active-edit {
@@ -138,7 +162,7 @@ textarea.input-field { height: 70px; resize: none; }
     font-weight: 500; 
     color: var(--text-muted); 
     text-align: center; 
-    z-index: 999; /* Z-index tinggi agar tidak tertutup background saat di-download */
+    z-index: 999; 
 }
 
 /* Panel Kontrol Style */
@@ -160,7 +184,7 @@ textarea.input-field { height: 70px; resize: none; }
 .btn-group button { flex: 1; padding: 8px; border: none; background: #FAFAFC; font-weight: 700; color: var(--text-main); cursor: pointer; border-right: 1px solid #E5E5EA; }
 .btn-group button:last-child { border-right: none; }
 .btn-group button:active { background: #E5E5EA; }
-.style-select { padding: 8px; border-radius: 8px; border: 1px solid #E5E5EA; background: #FAFAFC; font-family: 'Gilroy'; font-weight: 600; outline: none; }
+.style-select { padding: 8px; border-radius: 8px; border: 1px solid #E5E5EA; background: #FAFAFC; font-family: 'Gilroy', sans-serif; font-weight: 600; outline: none; }
 .color-picker { width: 100%; height: 36px; border: none; border-radius: 8px; cursor: pointer; background: transparent; }
 
 /* Buttons */
