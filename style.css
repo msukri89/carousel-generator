@@ -1,8 +1,8 @@
 /* Memanggil font secara lokal di halaman utama repository */
 @font-face {
     font-family: 'Gilroy';
-    src: url('./gilroy-regular.woff2') format('woff2'),
-         url('./gilroy-regular.woff') format('woff'),
+    src: url('./fonts/gilroy-regular.woff2') format('woff2'),
+         url('./fonts/gilroy-regular.woff') format('woff'),
          url('./Gilroy-Regular.ttf') format('truetype');
     font-weight: 400;
     font-style: normal;
@@ -11,8 +11,18 @@
 
 @font-face {
     font-family: 'Gilroy';
-    src: url('./gilroy-medium.woff2') format('woff2'),
-         url('./gilroy-medium.woff') format('woff'),
+    src: url('./fonts/gilroy-light.woff2') format('woff2'),
+         url('./fonts/gilroy-light.woff') format('woff'),
+         url('./Gilroy-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Gilroy';
+    src: url('./fonts/gilroy-medium.woff2') format('woff2'),
+         url('./fonts/gilroy-medium.woff') format('woff'),
          url('./Gilroy-Medium.ttf') format('truetype');
     font-weight: 500;
     font-style: normal;
@@ -21,8 +31,8 @@
 
 @font-face {
     font-family: 'Gilroy';
-    src: url('./gilroy-bold.woff2') format('woff2'),
-         url('./gilroy-bold.woff') format('woff'),
+    src: url('./fonts/gilroy-bold.woff2') format('woff2'),
+         url('./fonts/gilroy-bold.woff') format('woff'),
          url('./Gilroy-Bold.ttf') format('truetype');
     font-weight: 700;
     font-style: normal;
@@ -31,8 +41,8 @@
 
 @font-face {
     font-family: 'Gilroy';
-    src: url('./gilroy-heavy.woff2') format('woff2'),
-         url('./gilroy-heavy.woff') format('woff'),
+    src: url('./fonts/gilroy-heavy.woff2') format('woff2'),
+         url('./fonts/gilroy-heavy.woff') format('woff'),
          url('./Gilroy-Heavy.ttf') format('truetype');
     font-weight: 900;
     font-style: normal;
@@ -191,7 +201,7 @@ textarea.input-field { height: 70px; resize: none; }
 .style-row { display: flex; justify-content: space-between; gap: 10px; }
 .style-group { flex: 1; display: flex; flex-direction: column; gap: 6px; }
 .style-group label { font-size: 12px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
-.btn-group { display: flex; border: 1px solid #E5EEA; border-radius: 8px; overflow: hidden; }
+.btn-group { display: flex; border: 1px solid #E5E5EA; border-radius: 8px; overflow: hidden; }
 .btn-group button { flex: 1; padding: 8px; border: none; background: #FAFAFC; font-weight: 700; color: var(--text-main); cursor: pointer; border-right: 1px solid #E5EEA; }
 .btn-group button:last-child { border-right: none; }
 .btn-group button:active { background: #E5EEA; }
