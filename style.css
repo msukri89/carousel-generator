@@ -69,7 +69,7 @@ header h1 {
 }
 .upload-card { text-align: center; }
 .upload-label { color: var(--blue-ios); font-weight: 700; cursor: pointer; display: block; }
-.slide-card h3 { font-size: 15px; color: var(--text-muted); margin-bottom: 12px; font-weight: 700; }
+.slide-card h3 { font-size: 15px; color: var(--text-muted); margin-bottom: 12px; font-weight: 700; z-index: 2; }
 .input-field {
     width: 100%;
     border: 1px solid #E5E5EA;
