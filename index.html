@@ -58,6 +58,15 @@
             </div>
 
             <div id="style-panel" class="hidden">
+                
+                <!-- FITUR GESER POSISI: Dipindah ke urutan paling atas -->
+                <div class="style-row" style="margin-bottom: 10px;">
+                    <div class="style-group" style="flex: 1;">
+                        <label>Geser Posisi Teks (Atas/Bawah)</label>
+                        <input type="range" id="input-pos-y" min="-200" max="200" value="0" style="width: 100%; margin-top: 5px;">
+                    </div>
+                </div>
+
                 <div class="style-row" style="margin-bottom: 10px;">
                     <div class="style-group">
                         <label>Format Kata (Blok Teks Dulu)</label>
@@ -119,14 +128,6 @@
                     <div class="style-group">
                         <label>Warna</label>
                         <input type="color" id="input-color" value="#1C1C1E" class="color-picker">
-                    </div>
-                </div>
-
-                <!-- FITUR BARU: Geser Posisi Vertikal -->
-                <div class="style-row">
-                    <div class="style-group" style="flex: 1;">
-                        <label>Geser Posisi Teks (Atas/Bawah)</label>
-                        <input type="range" id="input-pos-y" min="-200" max="200" value="0" style="width: 100%; margin-top: 5px;">
                     </div>
                 </div>
 
