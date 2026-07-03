@@ -37,7 +37,7 @@
         <div id="review-screen" class="screen">
             <p class="subtitle">Ketuk teks pada slide untuk mengubah gaya</p>
             
-            <!-- FITUR BARU: Kontrol Ukuran Canvas -->
+            <!-- Kontrol Ukuran Canvas -->
             <div class="global-settings" style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); padding: 10px 15px; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.04);">
                 <label style="font-size: 13px; font-weight: 700; color: var(--text-muted);">Ukuran Canvas</label>
                 <select id="select-ratio" class="style-select" style="padding: 6px 12px; font-size: 14px; border: none; background: #F2F2F7; cursor: pointer;">
@@ -59,6 +59,19 @@
             </div>
 
             <div id="style-panel" class="hidden">
+                <!-- FITUR BARU: Edit Kata yang di-Blok (Rich Text) -->
+                <div class="style-row" style="margin-bottom: 10px;">
+                    <div class="style-group">
+                        <label>Format Kata (Blok Teks Dulu)</label>
+                        <div class="btn-group">
+                            <button id="btn-format-bold" style="font-weight: 900;">B</button>
+                            <button id="btn-format-italic" style="font-style: italic; font-family: serif;">I</button>
+                            <button id="btn-format-upper">AA</button>
+                            <button id="btn-format-cali" style="font-family: 'Dancing Script', cursive;">Cal</button>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="style-row">
                     <div class="style-group">
                         <label>Ukuran Teks</label>
@@ -75,9 +88,18 @@
                         </div>
                     </div>
                 </div>
+                
+                <!-- FITUR BARU: Jenis Font Keseluruhan Blok -->
                 <div class="style-row">
                     <div class="style-group">
-                        <label>Ketebalan (Font)</label>
+                        <label>Jenis Font (Blok Aktif)</label>
+                        <select id="select-font" class="style-select">
+                            <option value="'Gilroy', sans-serif">Gilroy (Default)</option>
+                            <option value="'Dancing Script', cursive">Calligraphy</option>
+                        </select>
+                    </div>
+                    <div class="style-group">
+                        <label>Ketebalan (Gilroy)</label>
                         <select id="select-weight" class="style-select">
                             <option value="900">Heavy</option>
                             <option value="700">Bold</option>
@@ -86,12 +108,8 @@
                             <option value="400">Regular</option>
                         </select>
                     </div>
-                    <div class="style-group">
-                        <label>Warna</label>
-                        <input type="color" id="input-color" value="#1C1C1E" class="color-picker">
-                    </div>
                 </div>
-                <!-- Tambahan Fitur Align Teks -->
+
                 <div class="style-row">
                     <div class="style-group">
                         <label>Rata Teks</label>
@@ -100,6 +118,10 @@
                             <button id="btn-align-center">Tengah</button>
                             <button id="btn-align-right">Kanan</button>
                         </div>
+                    </div>
+                    <div class="style-group">
+                        <label>Warna</label>
+                        <input type="color" id="input-color" value="#1C1C1E" class="color-picker">
                     </div>
                 </div>
             </div>
@@ -111,6 +133,11 @@
         </div>
     </div>
 
+    <!-- Toast UI untuk pemberitahuan exit -->
+    <div id="exit-toast" style="position:fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 10px 20px; border-radius: 20px; font-size: 14px; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; z-index: 9999;">
+        Tekan sekali lagi untuk keluar
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="script.js"></script>
@@ -119,7 +146,7 @@
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw.js')
                     .then(registration => {
-                        console.log('ServiceWorker registered with scope:', registration.scope);
+                        console.log('ServiceWorker registered');
                     })
                     .catch(error => {
                         console.log('ServiceWorker registration failed:', error);
