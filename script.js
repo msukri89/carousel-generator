@@ -23,10 +23,8 @@ history.pushState(null, null, location.href);
 window.addEventListener('popstate', (e) => {
     const currentTime = new Date().getTime();
     if (currentTime - backPressTime < 2000) {
-        // Jika ditekan dua kali berturut-turut, keluar dari aplikasi
         history.back(); 
     } else {
-        // Blokir exit pertama, munculkan peringatan
         e.preventDefault();
         history.pushState(null, null, location.href);
         backPressTime = currentTime;
@@ -35,6 +33,16 @@ window.addEventListener('popstate', (e) => {
     }
 });
 // ===================================================================
+
+// Helper: Konversi Hex ke RGB untuk keperluan Overlay Transparansi
+function hexToRgb(hex) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+    } : { r: 255, g: 255, b: 255 };
+}
 
 // Upload Gambar Seamless
 bgInput.addEventListener('change', function(e) {
@@ -49,6 +57,7 @@ bgInput.addEventListener('change', function(e) {
     }
 });
 
+// Penambahan UI Warna dan Transparansi di setiap kartu
 function createSlideInput() {
     totalInputCards++;
     const card = document.createElement('div');
@@ -58,6 +67,17 @@ function createSlideInput() {
         <textarea id="utama${totalInputCards}" class="input-field" placeholder="Teks Utama..."></textarea>
         <input type="text" id="cta${totalInputCards}" class="input-field" placeholder="Teks Sorotan (CTA)...">
         <input type="text" id="bawah${totalInputCards}" class="input-field" placeholder="Teks Bawah/Kecil...">
+        
+        <div style="display: flex; gap: 15px; align-items: center; padding: 10px; background: #FAFAFC; border-radius: 8px; border: 1px solid #E5E5EA; margin-bottom: 5px;">
+            <div style="display: flex; flex-direction: column; gap: 5px;">
+                <label style="font-size: 11px; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Warna Panel</label>
+                <input type="color" id="bgcolor${totalInputCards}" value="#FFFFFF" style="width: 50px; height: 30px; border: none; cursor: pointer; background: transparent; padding: 0;">
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 5px; flex: 1;">
+                <label style="font-size: 11px; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Transparansi Overlay</label>
+                <input type="range" id="bgopacity${totalInputCards}" min="0" max="1" step="0.05" value="0.5" style="width: 100%;">
+            </div>
+        </div>
     `;
     slideInputsContainer.appendChild(card);
 }
@@ -74,13 +94,16 @@ generateBtn.addEventListener('click', () => {
     carouselContent.innerHTML = '';
     let activeSlidesData = [];
 
+    // Ambil data termasuk warna dan transparansi
     for (let i = 1; i <= totalInputCards; i++) {
         const utama = document.getElementById(`utama${i}`).value.trim();
         const cta = document.getElementById(`cta${i}`).value.trim();
         const bawah = document.getElementById(`bawah${i}`).value.trim();
+        const bgColor = document.getElementById(`bgcolor${i}`).value;
+        const bgOpacity = document.getElementById(`bgopacity${i}`).value;
         
         if (utama !== '' || cta !== '' || bawah !== '') {
-            activeSlidesData.push({ utama, cta, bawah });
+            activeSlidesData.push({ utama, cta, bawah, bgColor, bgOpacity });
         }
     }
 
@@ -111,10 +134,15 @@ generateBtn.addEventListener('click', () => {
             
             const overlay = document.createElement('div');
             overlay.className = 'slide-bg-overlay';
-            overlay.style.backgroundColor = 'rgba(255, 255, 255, 0)'; 
+            
+            // Konversi warna HEX ke RGBA agar bisa menjadi overlay transparan
+            const rgb = hexToRgb(data.bgColor);
+            overlay.style.backgroundColor = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${data.bgOpacity})`; 
+            
             slide.appendChild(overlay);
         } else {
-            slide.style.backgroundColor = '#FFFFFF';
+            // Jika tidak ada gambar, jadikan warna tersebut sebagai background penuh
+            slide.style.backgroundColor = data.bgColor;
         }
 
         const centerWrapper = document.createElement('div');
@@ -162,7 +190,6 @@ generateBtn.addEventListener('click', () => {
 
 // LOGIKA EDITOR CANVAS
 carouselContent.addEventListener('click', (e) => {
-    // Cari elemen terdekat yang memiliki class editable-text (berfungsi juga jika klik pada <span> di dalam)
     const targetText = e.target.closest('.editable-text');
 
     if (targetText) {
@@ -174,7 +201,6 @@ carouselContent.addEventListener('click', (e) => {
         const computedStyle = window.getComputedStyle(activeEl);
         document.getElementById('select-weight').value = computedStyle.fontWeight;
         
-        // Cek Font bawaan element tsb untuk sinkronisasi select input font
         if(computedStyle.fontFamily.includes('Dancing Script')) {
             document.getElementById('select-font').value = "'Dancing Script', cursive";
         } else {
@@ -193,9 +219,7 @@ carouselContent.addEventListener('click', (e) => {
     }
 });
 
-
-// ================= FITUR 2 & 4: KONTROL TEKS BLOK (RICH TEXT FORMATTING) =================
-// Menggunakan event mousedown dan preventDefault agar seleksi kata (blok biru) tidak hilang saat ditekan
+// ================= KONTROL TEKS BLOK (RICH TEXT FORMATTING) =================
 document.getElementById('btn-format-bold').addEventListener('mousedown', (e) => {
     e.preventDefault(); document.execCommand('bold', false, null);
 });
@@ -209,12 +233,10 @@ document.getElementById('btn-format-upper').addEventListener('mousedown', (e) =>
     e.preventDefault();
     const selection = window.getSelection();
     if (selection.toString().length > 0) {
-        // Paksa kata yang diblok menjadi huruf besar
         document.execCommand('insertText', false, selection.toString().toUpperCase());
     }
 });
-
-// =======================================================================================
+// ============================================================================
 
 // Kontrol Fungsi Editor
 document.getElementById('btn-size-up').addEventListener('click', () => {
@@ -246,7 +268,6 @@ document.getElementById('select-weight').addEventListener('change', (e) => {
     activeEl.style.fontWeight = e.target.value;
 });
 
-// Kontrol Ubah Seluruh Jenis Font
 document.getElementById('select-font').addEventListener('change', (e) => {
     if(!activeEl) return;
     activeEl.style.fontFamily = e.target.value;
