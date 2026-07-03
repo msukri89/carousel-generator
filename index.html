@@ -37,7 +37,6 @@
         <div id="review-screen" class="screen">
             <p class="subtitle">Ketuk teks pada slide untuk mengubah gaya</p>
             
-            <!-- Kontrol Ukuran Canvas -->
             <div class="global-settings" style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); padding: 10px 15px; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.04);">
                 <label style="font-size: 13px; font-weight: 700; color: var(--text-muted);">Ukuran Canvas</label>
                 <select id="select-ratio" class="style-select" style="padding: 6px 12px; font-size: 14px; border: none; background: #F2F2F7; cursor: pointer;">
@@ -59,7 +58,6 @@
             </div>
 
             <div id="style-panel" class="hidden">
-                <!-- FITUR BARU: Edit Kata yang di-Blok (Rich Text) -->
                 <div class="style-row" style="margin-bottom: 10px;">
                     <div class="style-group">
                         <label>Format Kata (Blok Teks Dulu)</label>
@@ -89,7 +87,6 @@
                     </div>
                 </div>
                 
-                <!-- FITUR BARU: Jenis Font Keseluruhan Blok -->
                 <div class="style-row">
                     <div class="style-group">
                         <label>Jenis Font (Blok Aktif)</label>
@@ -124,6 +121,15 @@
                         <input type="color" id="input-color" value="#1C1C1E" class="color-picker">
                     </div>
                 </div>
+
+                <!-- FITUR BARU: Geser Posisi Vertikal -->
+                <div class="style-row">
+                    <div class="style-group" style="flex: 1;">
+                        <label>Geser Posisi Teks (Atas/Bawah)</label>
+                        <input type="range" id="input-pos-y" min="-200" max="200" value="0" style="width: 100%; margin-top: 5px;">
+                    </div>
+                </div>
+
             </div>
 
             <div class="action-buttons">
@@ -133,7 +139,7 @@
         </div>
     </div>
 
-    <!-- Toast UI untuk pemberitahuan exit -->
+    <!-- Toast UI -->
     <div id="exit-toast" style="position:fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 10px 20px; border-radius: 20px; font-size: 14px; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; z-index: 9999;">
         Tekan sekali lagi untuk keluar
     </div>
@@ -144,13 +150,7 @@
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
-                    .then(registration => {
-                        console.log('ServiceWorker registered');
-                    })
-                    .catch(error => {
-                        console.log('ServiceWorker registration failed:', error);
-                    });
+                navigator.serviceWorker.register('./sw.js').catch(error => { console.log('SW failed:', error); });
             });
         }
     </script>
