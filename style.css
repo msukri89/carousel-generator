@@ -1,53 +1,12 @@
-/* Memanggil font secara lokal di halaman utama repository */
-@font-face {
-    font-family: 'Gilroy';
-    src: url('./fonts/gilroy-regular.woff2') format('woff2'),
-         url('./fonts/gilroy-regular.woff') format('woff'),
-         url('./Gilroy-Regular.ttf') format('truetype');
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-}
+/* Memanggil font secara lokal di halaman utama repository (Sesuai kode sebelumnya) */
+@font-face { font-family: 'Gilroy'; src: url('./fonts/gilroy-regular.woff2') format('woff2'), url('./fonts/gilroy-regular.woff') format('woff'), url('./Gilroy-Regular.ttf') format('truetype'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Gilroy'; src: url('./fonts/gilroy-light.woff2') format('woff2'), url('./fonts/gilroy-light.woff') format('woff'), url('./Gilroy-Light.ttf') format('truetype'); font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Gilroy'; src: url('./fonts/gilroy-medium.woff2') format('woff2'), url('./fonts/gilroy-medium.woff') format('woff'), url('./Gilroy-Medium.ttf') format('truetype'); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Gilroy'; src: url('./fonts/gilroy-bold.woff2') format('woff2'), url('./fonts/gilroy-bold.woff') format('woff'), url('./Gilroy-Bold.ttf') format('truetype'); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Gilroy'; src: url('./fonts/gilroy-heavy.woff2') format('woff2'), url('./fonts/gilroy-heavy.woff') format('woff'), url('./Gilroy-Heavy.ttf') format('truetype'); font-weight: 900; font-style: normal; font-display: swap; }
 
-@font-face {
-    font-family: 'Gilroy';
-    src: url('./fonts/gilroy-light.woff2') format('woff2'),
-         url('./fonts/gilroy-light.woff') format('woff'),
-         url('./Gilroy-Light.ttf') format('truetype');
-    font-weight: 300;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'Gilroy';
-    src: url('./fonts/gilroy-medium.woff2') format('woff2'),
-         url('./fonts/gilroy-medium.woff') format('woff'),
-         url('./Gilroy-Medium.ttf') format('truetype');
-    font-weight: 500;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'Gilroy';
-    src: url('./fonts/gilroy-bold.woff2') format('woff2'),
-         url('./fonts/gilroy-bold.woff') format('woff'),
-         url('./Gilroy-Bold.ttf') format('truetype');
-    font-weight: 700;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'Gilroy';
-    src: url('./fonts/gilroy-heavy.woff2') format('woff2'),
-         url('./fonts/gilroy-heavy.woff') format('woff'),
-         url('./Gilroy-Heavy.ttf') format('truetype');
-    font-weight: 900;
-    font-style: normal;
-    font-display: swap;
-}
+/* IMPORT FONT CALLIGRAPHY (Dancing Script) */
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap');
 
 :root {
     --bg-color: #F2F2F7;
@@ -66,94 +25,29 @@
     font-family: 'Gilroy', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-body {
-    background-color: var(--bg-color);
-    color: var(--text-main);
-    display: flex;
-    justify-content: center;
-    padding: 15px;
-}
-
-.app-container {
-    width: 100%;
-    max-width: 420px;
-    padding-bottom: 30px;
-}
-
-header h1 {
-    font-size: 28px;
-    font-weight: 900;
-    text-align: center;
-    margin-bottom: 5px;
-    margin-top: 10px;
-}
-
-.subtitle {
-    text-align: center;
-    color: var(--text-muted);
-    font-size: 14px;
-    margin-bottom: 20px;
-    font-weight: 400;
-}
-
+body { background-color: var(--bg-color); color: var(--text-main); display: flex; justify-content: center; padding: 15px; }
+.app-container { width: 100%; max-width: 420px; padding-bottom: 30px; }
+header h1 { font-size: 28px; font-weight: 900; text-align: center; margin-bottom: 5px; margin-top: 10px; }
+.subtitle { text-align: center; color: var(--text-muted); font-size: 14px; margin-bottom: 20px; font-weight: 400; }
 .screen { display: none; animation: fadeIn 0.4s ease; }
 .screen.active { display: block; }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
 /* Upload & Input Cards */
-.upload-card, .slide-card {
-    background-color: var(--card-bg);
-    border-radius: 12px;
-    padding: 15px;
-    margin-bottom: 15px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
-}
+.upload-card, .slide-card { background-color: var(--card-bg); border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
 .upload-card { text-align: center; }
 .upload-label { color: var(--blue-ios); font-weight: 700; cursor: pointer; display: block; }
 .slide-card h3 { font-size: 15px; color: var(--text-muted); margin-bottom: 12px; font-weight: 700; z-index: 2; }
-.input-field {
-    width: 100%;
-    border: 1px solid #E5E5EA;
-    border-radius: 8px;
-    padding: 12px;
-    font-size: 15px;
-    margin-bottom: 10px;
-    background-color: #FAFAFC;
-    outline: none;
-    font-weight: 500;
-}
+.input-field { width: 100%; border: 1px solid #E5E5EA; border-radius: 8px; padding: 12px; font-size: 15px; margin-bottom: 10px; background-color: #FAFAFC; outline: none; font-weight: 500; }
 .input-field:focus { border-color: var(--blue-ios); }
 textarea.input-field { height: 70px; resize: none; }
 
 /* Carousel */
-.carousel-wrapper {
-    width: 100%;
-    aspect-ratio: 4 / 5;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    background-color: white;
-}
+.carousel-wrapper { width: 100%; aspect-ratio: 4 / 5; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1); background-color: white; }
 .swiper { width: 100%; height: 100%; }
-.swiper-slide {
-    position: relative; 
-    background-color: transparent;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 50px 40px; 
-    text-align: center;
-}
-.slide-bg-overlay {
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    z-index: 1;
-}
+.swiper-slide { position: relative; background-color: transparent; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 50px 40px; text-align: center; }
+.slide-bg-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 1; }
 
 /* Teks yang bisa diedit */
 .editable-text {
@@ -164,57 +58,31 @@ textarea.input-field { height: 70px; resize: none; }
     transition: box-shadow 0.2s;
     border-radius: 8px;
     padding: 4px;
-    font-family: 'Gilroy', -apple-system, BlinkMacSystemFont, sans-serif !important; 
+    /* Dihapus !important agar font Inline (Calligraphy) bisa aktif */
+    font-family: 'Gilroy', -apple-system, BlinkMacSystemFont, sans-serif; 
 }
-.editable-text.active-edit {
-    box-shadow: 0 0 0 2px var(--blue-ios);
-    background: rgba(0, 122, 255, 0.05);
-}
+.editable-text.active-edit { box-shadow: 0 0 0 2px var(--blue-ios); background: rgba(0, 122, 255, 0.05); }
 
 /* Default Styles untuk Text Box */
 .teks-utama { font-size: 34px; font-weight: 900; line-height: 1.15; color: var(--text-main); margin-bottom: 12px; text-align: center; }
 .teks-cta { font-size: 18px; font-weight: 600; color: var(--merah-bata); margin-bottom: 15px; text-align: center; }
-.teks-bawah { 
-    position: absolute; 
-    bottom: 35px; 
-    left: 40px; 
-    right: 40px;
-width: auto;
-    font-size: 14px; 
-    font-weight: 500; 
-    color: var(--text-muted); 
-    text-align: center; 
-    z-index: 999; 
-    max-width: calc(100% - 80px);
-    box-sizing: border-box;
-    margin: 0 auto;
-    word-wrap: break-word;
-}
+.teks-bawah { position: absolute; bottom: 35px; left: 40px; right: 40px; width: auto; font-size: 14px; font-weight: 500; color: var(--text-muted); text-align: center; z-index: 999; max-width: calc(100% - 80px); box-sizing: border-box; margin: 0 auto; word-wrap: break-word; }
 
 /* Panel Kontrol Style */
-#style-panel {
-    background: var(--card-bg);
-    border-radius: 16px;
-    padding: 16px;
-    margin-top: 15px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
+#style-panel { background: var(--card-bg); border-radius: 16px; padding: 16px; margin-top: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column; gap: 12px; }
 #style-panel.hidden { display: none; }
 .style-row { display: flex; justify-content: space-between; gap: 10px; }
 .style-group { flex: 1; display: flex; flex-direction: column; gap: 6px; }
 .style-group label { font-size: 12px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
-.btn-group { display: flex; border: 1px solid #E5EEA; border-radius: 8px; overflow: hidden; }
-.btn-group button { flex: 1; padding: 8px; border: none; background: #FAFAFC; font-weight: 700; color: var(--text-main); cursor: pointer; border-right: 1px solid #E5EEA; }
+.btn-group { display: flex; border: 1px solid #E5E5EA; border-radius: 8px; overflow: hidden; }
+.btn-group button { flex: 1; padding: 8px; border: none; background: #FAFAFC; font-weight: 700; color: var(--text-main); cursor: pointer; border-right: 1px solid #E5E5EA; }
 .btn-group button:last-child { border-right: none; }
-.btn-group button:active { background: #E5EEA; }
-.style-select { padding: 8px; border-radius: 8px; border: 1px solid #E5EEA; background: #FAFAFC; font-family: 'Gilroy', sans-serif; font-weight: 600; outline: none; }
+.btn-group button:active { background: #E5E5EA; }
+.style-select { padding: 8px; border-radius: 8px; border: 1px solid #E5E5EA; background: #FAFAFC; font-family: 'Gilroy', sans-serif; font-weight: 600; outline: none; }
 .color-picker { width: 100%; height: 36px; border: none; border-radius: 8px; cursor: pointer; background: transparent; }
 
 /* Buttons */
 .action-buttons { display: flex; gap: 10px; margin-top: 15px; }
 .ios-btn { flex: 1; padding: 14px; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
 .ios-btn.primary { background-color: var(--blue-ios); color: white; }
-.ios-btn.secondary { background-color: #E5EEA; color: var(--blue-ios); }
+.ios-btn.secondary { background-color: #E5E5EA; color: var(--blue-ios); }
