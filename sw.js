@@ -1,4 +1,4 @@
-const CACHE_NAME = 'carousel-maker-v3';
+const CACHE_NAME = 'carousel-maker-v4';
 const urlsToCache = [
   './',
   './index.html',
@@ -14,7 +14,7 @@ const urlsToCache = [
   './gilroy-light.woff2'
 ];
 
-// Install Service Worker dan simpan file ke cache
+// Install Service Worker dan simpan aset utama ke cache
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
@@ -22,22 +22,40 @@ self.addEventListener('install', event => {
         return cache.addAll(urlsToCache);
       })
   );
+  self.skipWaiting();
 });
 
-// Ambil file dari cache saat aplikasi dibuka
+// Strategi Stale-While-Revalidate untuk Fitur OFFLINE sepenuhnya
+// Termasuk cache dinamis untuk CDN Swiper, HTML2Canvas, dan Google Fonts
 self.addEventListener('fetch', event => {
   event.respondWith(
-    caches.match(event.request)
-      .then(response => {
-        if (response) {
-          return response; // Gunakan versi cache
+    caches.match(event.request).then(cachedResponse => {
+      // Selalu coba ambil dari jaringan terlebih dahulu untuk update
+      const fetchPromise = fetch(event.request).then(networkResponse => {
+        // Jangan cache jika respon gagal atau bukan dari HTTP/HTTPS
+        if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic' && networkResponse.type !== 'cors') {
+          return networkResponse;
         }
-        return fetch(event.request); // Jika tidak ada, ambil dari internet
-      })
+        
+        // Simpan ke cache secara dinamis
+        const responseToCache = networkResponse.clone();
+        caches.open(CACHE_NAME).then(cache => {
+          if (event.request.method === 'GET') {
+            cache.put(event.request, responseToCache);
+          }
+        });
+        return networkResponse;
+      }).catch(() => {
+        // Jika offline dan network gagal, abaikan error (kembali ke cachedResponse)
+      });
+
+      // Kembalikan versi cache langsung agar super cepat, jika tidak ada tunggu dari jaringan
+      return cachedResponse || fetchPromise;
+    })
   );
 });
 
-// Bersihkan cache lama jika ada pembaruan
+// Bersihkan cache versi lama
 self.addEventListener('activate', event => {
   const cacheWhitelist = [CACHE_NAME];
   event.waitUntil(
@@ -51,4 +69,5 @@ self.addEventListener('activate', event => {
       );
     })
   );
+  self.clients.claim();
 });
