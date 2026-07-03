@@ -13,7 +13,28 @@ const stylePanel = document.getElementById('style-panel');
 let swiperInstance = null;
 let bgImageUrl = '';
 let activeEl = null; 
-let totalInputCards = 0; // Menghitung total panel input yang ada
+let totalInputCards = 0; 
+
+// ================= FITUR 1: DOUBLE BACK UNTUK EXIT =================
+let backPressTime = 0;
+const exitToast = document.getElementById('exit-toast');
+history.pushState(null, null, location.href);
+
+window.addEventListener('popstate', (e) => {
+    const currentTime = new Date().getTime();
+    if (currentTime - backPressTime < 2000) {
+        // Jika ditekan dua kali berturut-turut, keluar dari aplikasi
+        history.back(); 
+    } else {
+        // Blokir exit pertama, munculkan peringatan
+        e.preventDefault();
+        history.pushState(null, null, location.href);
+        backPressTime = currentTime;
+        exitToast.style.opacity = '1';
+        setTimeout(() => exitToast.style.opacity = '0', 2000);
+    }
+});
+// ===================================================================
 
 // Upload Gambar Seamless
 bgInput.addEventListener('change', function(e) {
@@ -28,7 +49,6 @@ bgInput.addEventListener('change', function(e) {
     }
 });
 
-// Fungsi untuk membuat elemen form slide baru
 function createSlideInput() {
     totalInputCards++;
     const card = document.createElement('div');
@@ -42,22 +62,18 @@ function createSlideInput() {
     slideInputsContainer.appendChild(card);
 }
 
-// Otomatis membuat 5 Kartu Input pertama kali
 for (let i = 0; i < 5; i++) {
     createSlideInput();
 }
 
-// Event untuk tombol tambah slide
 addSlideBtn.addEventListener('click', () => {
     createSlideInput();
 });
 
-// Generate Ditekan
 generateBtn.addEventListener('click', () => {
     carouselContent.innerHTML = '';
     let activeSlidesData = [];
 
-    // Looping berdasarkan jumlah panel input yang telah di-generate
     for (let i = 1; i <= totalInputCards; i++) {
         const utama = document.getElementById(`utama${i}`).value.trim();
         const cta = document.getElementById(`cta${i}`).value.trim();
@@ -75,14 +91,12 @@ generateBtn.addEventListener('click', () => {
 
     const totalSlides = activeSlidesData.length;
 
-    // Build Slides
     activeSlidesData.forEach((data, index) => {
         const slide = document.createElement('div');
         slide.className = 'swiper-slide';
         slide.style.position = 'relative';
         slide.style.overflow = 'hidden'; 
 
-        // Latar Belakang Seamless menggunakan Layering agar html2canvas presisi
         if (bgImageUrl !== '') {
             const bgLayer = document.createElement('div');
             bgLayer.style.position = 'absolute';
@@ -95,7 +109,6 @@ generateBtn.addEventListener('click', () => {
             bgLayer.style.zIndex = '0';
             slide.appendChild(bgLayer);
             
-            // Overlay diturunkan ke 0 agar warna gambar sama dengan aslinya (berdasarkan perbaikan sebelumnya)
             const overlay = document.createElement('div');
             overlay.className = 'slide-bg-overlay';
             overlay.style.backgroundColor = 'rgba(255, 255, 255, 0)'; 
@@ -104,7 +117,6 @@ generateBtn.addEventListener('click', () => {
             slide.style.backgroundColor = '#FFFFFF';
         }
 
-        // Kontainer tengah
         const centerWrapper = document.createElement('div');
         centerWrapper.style.cssText = 'flex: 1; display: flex; flex-direction: column; justify-content: center; width: 100%; z-index: 2; position: relative;';
 
@@ -113,13 +125,11 @@ generateBtn.addEventListener('click', () => {
         
         slide.appendChild(centerWrapper);
         
-     if(data.bawah) {
+        if(data.bawah) {
             const bawahEl = document.createElement('div');
             bawahEl.className = 'teks-bawah editable-text swiper-no-swiping';
             bawahEl.contentEditable = "true";
             bawahEl.innerHTML = data.bawah;
-            
-            // pastikan positioned relatif terhadap slide dan styling eksplisit agar selalu center
             bawahEl.style.position = 'absolute';
             bawahEl.style.zIndex = '999';
             bawahEl.style.left = '40px';
@@ -134,7 +144,6 @@ generateBtn.addEventListener('click', () => {
             slide.appendChild(bawahEl);
         }
 
-        
         carouselContent.appendChild(slide);
     });
 
@@ -153,15 +162,24 @@ generateBtn.addEventListener('click', () => {
 
 // LOGIKA EDITOR CANVAS
 carouselContent.addEventListener('click', (e) => {
-    if (e.target.classList.contains('editable-text')) {
+    // Cari elemen terdekat yang memiliki class editable-text (berfungsi juga jika klik pada <span> di dalam)
+    const targetText = e.target.closest('.editable-text');
+
+    if (targetText) {
         if (activeEl) activeEl.classList.remove('active-edit');
-        
-        activeEl = e.target;
+        activeEl = targetText;
         activeEl.classList.add('active-edit');
         stylePanel.classList.remove('hidden');
 
         const computedStyle = window.getComputedStyle(activeEl);
         document.getElementById('select-weight').value = computedStyle.fontWeight;
+        
+        // Cek Font bawaan element tsb untuk sinkronisasi select input font
+        if(computedStyle.fontFamily.includes('Dancing Script')) {
+            document.getElementById('select-font').value = "'Dancing Script', cursive";
+        } else {
+            document.getElementById('select-font').value = "'Gilroy', sans-serif";
+        }
         
         const rgb = computedStyle.color.match(/\d+/g);
         if(rgb) {
@@ -174,6 +192,29 @@ carouselContent.addEventListener('click', (e) => {
         stylePanel.classList.add('hidden');
     }
 });
+
+
+// ================= FITUR 2 & 4: KONTROL TEKS BLOK (RICH TEXT FORMATTING) =================
+// Menggunakan event mousedown dan preventDefault agar seleksi kata (blok biru) tidak hilang saat ditekan
+document.getElementById('btn-format-bold').addEventListener('mousedown', (e) => {
+    e.preventDefault(); document.execCommand('bold', false, null);
+});
+document.getElementById('btn-format-italic').addEventListener('mousedown', (e) => {
+    e.preventDefault(); document.execCommand('italic', false, null);
+});
+document.getElementById('btn-format-cali').addEventListener('mousedown', (e) => {
+    e.preventDefault(); document.execCommand('fontName', false, 'Dancing Script, cursive');
+});
+document.getElementById('btn-format-upper').addEventListener('mousedown', (e) => {
+    e.preventDefault();
+    const selection = window.getSelection();
+    if (selection.toString().length > 0) {
+        // Paksa kata yang diblok menjadi huruf besar
+        document.execCommand('insertText', false, selection.toString().toUpperCase());
+    }
+});
+
+// =======================================================================================
 
 // Kontrol Fungsi Editor
 document.getElementById('btn-size-up').addEventListener('click', () => {
@@ -205,6 +246,12 @@ document.getElementById('select-weight').addEventListener('change', (e) => {
     activeEl.style.fontWeight = e.target.value;
 });
 
+// Kontrol Ubah Seluruh Jenis Font
+document.getElementById('select-font').addEventListener('change', (e) => {
+    if(!activeEl) return;
+    activeEl.style.fontFamily = e.target.value;
+});
+
 document.getElementById('input-color').addEventListener('input', (e) => {
     if(!activeEl) return;
     activeEl.style.color = e.target.value;
@@ -224,12 +271,11 @@ document.getElementById('btn-align-right').addEventListener('click', () => {
     activeEl.style.textAlign = 'right';
 });
 
-// === KONTROL UKURAN CAROUSEL (ASPECT RATIO) ===
+// KONTROL UKURAN CAROUSEL (ASPECT RATIO)
 document.getElementById('select-ratio').addEventListener('change', (e) => {
     const wrapper = document.querySelector('.carousel-wrapper');
     wrapper.style.aspectRatio = e.target.value;
     
-    // Memaksa Swiper untuk menghitung ulang dimensi setelah canvas berubah
     if (swiperInstance) {
         setTimeout(() => {
             swiperInstance.update();
@@ -259,7 +305,6 @@ downloadBtn.addEventListener('click', async () => {
         swiperInstance.slideTo(i, 0); 
         await new Promise(r => setTimeout(r, 400)); 
         
-        // Hilangkan selection dan blur elemen aktif agar handle teks tidak ter-render
         if (window.getSelection) {
           const sel = window.getSelection();
           if (sel && sel.rangeCount) sel.removeAllRanges();
