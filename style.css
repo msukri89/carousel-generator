@@ -67,7 +67,7 @@ textarea.input-field { height: 70px; resize: none; }
 .teks-cta { font-size: 18px; font-weight: 600; color: var(--merah-bata); margin-bottom: 15px; text-align: center; }
 
 /* Teks Bawah (Diupdate agar tidak nabrak icon Share/Save) */
-.teks-bawah { position: absolute; bottom: 35px; left: 0; right: 0; width: auto; font-size: 14px; font-weight: 500; color: var(--text-muted); text-align: center; z-index: 999; max-width: calc(100% - 180px); box-sizing: border-box; margin: 0 auto; word-wrap: break-word; }
+.teks-bawah { position: absolute; bottom: 35px; left: 40px; right: 40px; width: auto; font-size: 14px; font-weight: 500; color: var(--text-muted); text-align: center; z-index: 999; box-sizing: border-box; margin: 0 auto; word-wrap: break-word; }
 
 /* FITUR BARU: Footer Action (Share & Save) */
 .footer-action { position: absolute; bottom: 33px; display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: var(--text-main); z-index: 999; cursor: pointer; }
