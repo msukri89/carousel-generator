@@ -9,13 +9,13 @@ const addSlideBtn = document.getElementById('add-slide-btn');
 const bgInput = document.getElementById('bg-input');
 const uploadText = document.getElementById('upload-text');
 const stylePanel = document.getElementById('style-panel');
+const posSlider = document.getElementById('input-pos-y');
 
 let swiperInstance = null;
 let bgImageUrl = '';
 let activeEl = null; 
 let totalInputCards = 0; 
 
-// ================= FITUR 1: DOUBLE BACK UNTUK EXIT =================
 let backPressTime = 0;
 const exitToast = document.getElementById('exit-toast');
 history.pushState(null, null, location.href);
@@ -32,14 +32,12 @@ window.addEventListener('popstate', (e) => {
         setTimeout(() => exitToast.style.opacity = '0', 2000);
     }
 });
-// ===================================================================
 
 function hexToRgb(hex) {
     var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result ? { r: parseInt(result[1], 16), g: parseInt(result[2], 16), b: parseInt(result[3], 16) } : { r: 255, g: 255, b: 255 };
 }
 
-// Upload Gambar Seamless
 bgInput.addEventListener('change', function(e) {
     const file = e.target.files[0];
     if(file) {
@@ -52,7 +50,6 @@ bgInput.addEventListener('change', function(e) {
     }
 });
 
-// Pembuatan UI
 function createSlideInput() {
     totalInputCards++;
     const card = document.createElement('div');
@@ -81,7 +78,6 @@ for (let i = 0; i < 5; i++) { createSlideInput(); }
 
 addSlideBtn.addEventListener('click', () => { createSlideInput(); });
 
-// ================= GENERATE SLIDES =================
 generateBtn.addEventListener('click', () => {
     carouselContent.innerHTML = '';
     let activeSlidesData = [];
@@ -111,7 +107,6 @@ generateBtn.addEventListener('click', () => {
         slide.style.position = 'relative';
         slide.style.overflow = 'hidden'; 
 
-        // Manajemen Latar Belakang (Warna & Seamless Image)
         if (bgImageUrl !== '') {
             const bgLayer = document.createElement('div');
             bgLayer.style.position = 'absolute';
@@ -134,21 +129,21 @@ generateBtn.addEventListener('click', () => {
         }
 
         const centerWrapper = document.createElement('div');
-        centerWrapper.style.cssText = 'flex: 1; display: flex; flex-direction: column; justify-content: center; width: 100%; z-index: 2; position: relative;';
+        // FIX: Menambahkan margin-bottom agar defaultnya terangkat ke atas untuk keseimbangan visual
+        centerWrapper.style.cssText = 'flex: 1; display: flex; flex-direction: column; justify-content: center; width: 100%; z-index: 2; position: relative; margin-bottom: 60px;';
 
-        if(data.utama) centerWrapper.innerHTML += `<div class="teks-utama editable-text swiper-no-swiping" contenteditable="true">${data.utama.replace(/\n/g, '<br>')}</div>`;
-        if(data.cta) centerWrapper.innerHTML += `<div class="teks-cta editable-text swiper-no-swiping" contenteditable="true">${data.cta}</div>`;
+        if(data.utama) centerWrapper.innerHTML += `<div class="teks-utama editable-text swiper-no-swiping" contenteditable="true" data-pos-y="0">${data.utama.replace(/\n/g, '<br>')}</div>`;
+        if(data.cta) centerWrapper.innerHTML += `<div class="teks-cta editable-text swiper-no-swiping" contenteditable="true" data-pos-y="0">${data.cta}</div>`;
         
         slide.appendChild(centerWrapper);
         
-        // Teks Bawah
         if(data.bawah) {
             const bawahEl = document.createElement('div');
             bawahEl.className = 'teks-bawah editable-text swiper-no-swiping';
             bawahEl.contentEditable = "true";
             bawahEl.innerHTML = data.bawah;
+            bawahEl.setAttribute('data-pos-y', '0');
             
-            // max-width dipersempit agar tidak tabrakan dengan icon
             bawahEl.style.position = 'absolute';
             bawahEl.style.zIndex = '999';
             bawahEl.style.left = '0';
@@ -162,33 +157,18 @@ generateBtn.addEventListener('click', () => {
 
             slide.appendChild(bawahEl);
         }
-
-        // --- FITUR BARU: FOOTER SHARE & SAVE ---
         
-        // 1. Icon Share (Kiri Bawah) - Pesawat Kertas
         const footerLeft = document.createElement('div');
         footerLeft.className = 'footer-action share-action editable-text swiper-no-swiping';
-        footerLeft.innerHTML = `
-            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="22" y1="2" x2="11" y2="13"></line>
-                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-            </svg>
-            <span>SHARE</span>
-        `;
+        footerLeft.setAttribute('data-pos-y', '0');
+        footerLeft.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg><span>SHARE</span>`;
         slide.appendChild(footerLeft);
 
-        // 2. Icon Save (Kanan Bawah) - Bookmark ala TikTok
         const footerRight = document.createElement('div');
         footerRight.className = 'footer-action save-action editable-text swiper-no-swiping';
-        footerRight.innerHTML = `
-            <span>SAVE</span>
-            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
-            </svg>
-        `;
+        footerRight.setAttribute('data-pos-y', '0');
+        footerRight.innerHTML = `<span>SAVE</span><svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>`;
         slide.appendChild(footerRight);
-        
-        // ----------------------------------------
 
         carouselContent.appendChild(slide);
     });
@@ -206,7 +186,7 @@ generateBtn.addEventListener('click', () => {
     });
 });
 
-// ================= LOGIKA EDITOR CANVAS =================
+// LOGIKA EDITOR CANVAS
 carouselContent.addEventListener('click', (e) => {
     const targetText = e.target.closest('.editable-text');
 
@@ -230,6 +210,11 @@ carouselContent.addEventListener('click', (e) => {
             const hex = `#${((1 << 24) + (+rgb[0] << 16) + (+rgb[1] << 8) + +rgb[2]).toString(16).slice(1)}`;
             document.getElementById('input-color').value = hex;
         }
+
+        // Sinkronisasi Slider Posisi
+        const currentY = activeEl.getAttribute('data-pos-y') || 0;
+        posSlider.value = currentY;
+
     } else {
         if (activeEl) activeEl.classList.remove('active-edit');
         activeEl = null;
@@ -237,7 +222,7 @@ carouselContent.addEventListener('click', (e) => {
     }
 });
 
-// Kontrol Teks Blok (Rich Text Formatting)
+// Kontrol Teks Blok
 document.getElementById('btn-format-bold').addEventListener('mousedown', (e) => { e.preventDefault(); document.execCommand('bold', false, null); });
 document.getElementById('btn-format-italic').addEventListener('mousedown', (e) => { e.preventDefault(); document.execCommand('italic', false, null); });
 document.getElementById('btn-format-cali').addEventListener('mousedown', (e) => { e.preventDefault(); document.execCommand('fontName', false, 'Dancing Script, cursive'); });
@@ -247,7 +232,15 @@ document.getElementById('btn-format-upper').addEventListener('mousedown', (e) =>
     if (selection.toString().length > 0) document.execCommand('insertText', false, selection.toString().toUpperCase());
 });
 
-// Kontrol Fungsi Editor
+// KONTROL POSISI VERTIKAL (Slider Baru)
+posSlider.addEventListener('input', (e) => {
+    if(!activeEl) return;
+    const val = e.target.value;
+    activeEl.setAttribute('data-pos-y', val);
+    activeEl.style.transform = `translateY(${val}px)`;
+});
+
+// Kontrol Editor Dasar
 document.getElementById('btn-size-up').addEventListener('click', () => {
     if(!activeEl) return; let size = parseFloat(window.getComputedStyle(activeEl).fontSize); activeEl.style.fontSize = (size + 2) + 'px';
 });
@@ -264,19 +257,16 @@ document.getElementById('select-weight').addEventListener('change', (e) => { if(
 document.getElementById('select-font').addEventListener('change', (e) => { if(!activeEl) return; activeEl.style.fontFamily = e.target.value; });
 document.getElementById('input-color').addEventListener('input', (e) => { if(!activeEl) return; activeEl.style.color = e.target.value; });
 
-// Alignment Kontrol
 document.getElementById('btn-align-left').addEventListener('click', () => { if(!activeEl) return; activeEl.style.textAlign = 'left'; });
 document.getElementById('btn-align-center').addEventListener('click', () => { if(!activeEl) return; activeEl.style.textAlign = 'center'; });
 document.getElementById('btn-align-right').addEventListener('click', () => { if(!activeEl) return; activeEl.style.textAlign = 'right'; });
 
-// Kontrol Aspect Ratio
 document.getElementById('select-ratio').addEventListener('change', (e) => {
     const wrapper = document.querySelector('.carousel-wrapper');
     wrapper.style.aspectRatio = e.target.value;
     if (swiperInstance) setTimeout(() => swiperInstance.update(), 150);
 });
 
-// Kembali
 backBtn.addEventListener('click', () => {
     if (activeEl) activeEl.classList.remove('active-edit');
     stylePanel.classList.add('hidden');
@@ -284,7 +274,6 @@ backBtn.addEventListener('click', () => {
     inputScreen.classList.add('active');
 });
 
-// Download
 downloadBtn.addEventListener('click', async () => {
     if (activeEl) activeEl.classList.remove('active-edit');
     stylePanel.classList.add('hidden');
