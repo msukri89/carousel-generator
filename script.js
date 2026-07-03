@@ -137,7 +137,7 @@ generateBtn.addEventListener('click', () => {
         
         slide.appendChild(centerWrapper);
         
-        if(data.bawah) {
+                if(data.bawah) {
             const bawahEl = document.createElement('div');
             bawahEl.className = 'teks-bawah editable-text swiper-no-swiping';
             bawahEl.contentEditable = "true";
@@ -146,17 +146,20 @@ generateBtn.addEventListener('click', () => {
             
             bawahEl.style.position = 'absolute';
             bawahEl.style.zIndex = '999';
-            bawahEl.style.left = '0';
-            bawahEl.style.right = '0';
+            // Menyamakan lebar dengan batas padding 40px
+            bawahEl.style.left = '40px'; 
+            bawahEl.style.right = '40px';
             bawahEl.style.bottom = '35px';
             bawahEl.style.boxSizing = 'border-box';
-            bawahEl.style.maxWidth = 'calc(100% - 180px)';
+            // Menghapus max-width agar tidak sempit
+            bawahEl.style.maxWidth = 'none'; 
+            bawahEl.style.width = 'auto';
             bawahEl.style.textAlign = 'center';
             bawahEl.style.margin = '0 auto';
             bawahEl.style.wordWrap = 'break-word';
 
             slide.appendChild(bawahEl);
-        }
+                }
         
         const footerLeft = document.createElement('div');
         footerLeft.className = 'footer-action share-action editable-text swiper-no-swiping';
