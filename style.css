@@ -1,4 +1,4 @@
-/* Memanggil font secara lokal di halaman utama repository (Sesuai kode sebelumnya) */
+/* Memanggil font secara lokal di halaman utama repository */
 @font-face { font-family: 'Gilroy'; src: url('./fonts/gilroy-regular.woff2') format('woff2'), url('./fonts/gilroy-regular.woff') format('woff'), url('./Gilroy-Regular.ttf') format('truetype'); font-weight: 400; font-style: normal; font-display: swap; }
 @font-face { font-family: 'Gilroy'; src: url('./fonts/gilroy-light.woff2') format('woff2'), url('./fonts/gilroy-light.woff') format('woff'), url('./Gilroy-Light.ttf') format('truetype'); font-weight: 300; font-style: normal; font-display: swap; }
 @font-face { font-family: 'Gilroy'; src: url('./fonts/gilroy-medium.woff2') format('woff2'), url('./fonts/gilroy-medium.woff') format('woff'), url('./Gilroy-Medium.ttf') format('truetype'); font-weight: 500; font-style: normal; font-display: swap; }
@@ -58,7 +58,6 @@ textarea.input-field { height: 70px; resize: none; }
     transition: box-shadow 0.2s;
     border-radius: 8px;
     padding: 4px;
-    /* Dihapus !important agar font Inline (Calligraphy) bisa aktif */
     font-family: 'Gilroy', -apple-system, BlinkMacSystemFont, sans-serif; 
 }
 .editable-text.active-edit { box-shadow: 0 0 0 2px var(--blue-ios); background: rgba(0, 122, 255, 0.05); }
@@ -66,7 +65,15 @@ textarea.input-field { height: 70px; resize: none; }
 /* Default Styles untuk Text Box */
 .teks-utama { font-size: 34px; font-weight: 900; line-height: 1.15; color: var(--text-main); margin-bottom: 12px; text-align: center; }
 .teks-cta { font-size: 18px; font-weight: 600; color: var(--merah-bata); margin-bottom: 15px; text-align: center; }
-.teks-bawah { position: absolute; bottom: 35px; left: 40px; right: 40px; width: auto; font-size: 14px; font-weight: 500; color: var(--text-muted); text-align: center; z-index: 999; max-width: calc(100% - 80px); box-sizing: border-box; margin: 0 auto; word-wrap: break-word; }
+
+/* Teks Bawah (Diupdate agar tidak nabrak icon Share/Save) */
+.teks-bawah { position: absolute; bottom: 35px; left: 0; right: 0; width: auto; font-size: 14px; font-weight: 500; color: var(--text-muted); text-align: center; z-index: 999; max-width: calc(100% - 180px); box-sizing: border-box; margin: 0 auto; word-wrap: break-word; }
+
+/* FITUR BARU: Footer Action (Share & Save) */
+.footer-action { position: absolute; bottom: 33px; display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: var(--text-main); z-index: 999; cursor: pointer; }
+.footer-action.editable-text { width: auto; /* Mencegah pelebaran width 100% dari class dasar */ }
+.share-action { left: 30px; }
+.save-action { right: 30px; }
 
 /* Panel Kontrol Style */
 #style-panel { background: var(--card-bg); border-radius: 16px; padding: 16px; margin-top: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column; gap: 12px; }
