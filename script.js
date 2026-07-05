@@ -16,6 +16,7 @@ let bgImageUrl = '';
 let activeEl = null; 
 let totalInputCards = 0; 
 
+// ================= FITUR 1: DOUBLE BACK UNTUK EXIT =================
 let backPressTime = 0;
 const exitToast = document.getElementById('exit-toast');
 history.pushState(null, null, location.href);
@@ -56,9 +57,9 @@ function createSlideInput() {
     card.className = 'slide-card';
     card.innerHTML = `
         <h3>Slide ${totalInputCards}</h3>
-        <textarea id="utama${totalInputCards}" class="input-field" placeholder="Teks Utama..."></textarea>
-        <input type="text" id="cta${totalInputCards}" class="input-field" placeholder="Teks Sorotan (CTA)...">
-        <input type="text" id="bawah${totalInputCards}" class="input-field" placeholder="Teks Bawah/Kecil...">
+        <input type="text" id="atas${totalInputCards}" class="input-field" placeholder="Teks Atas (Kecil Bold)...">
+        <textarea id="tengah${totalInputCards}" class="input-field" placeholder="Teks Tengah (Besar Heavy)..."></textarea>
+        <input type="text" id="bawah${totalInputCards}" class="input-field" placeholder="Teks Bawah (Kecil Reguler)...">
         
         <div style="display: flex; gap: 15px; align-items: center; padding: 10px; background: #FAFAFC; border-radius: 8px; border: 1px solid #E5E5EA; margin-bottom: 5px;">
             <div style="display: flex; flex-direction: column; gap: 5px;">
@@ -83,14 +84,14 @@ generateBtn.addEventListener('click', () => {
     let activeSlidesData = [];
 
     for (let i = 1; i <= totalInputCards; i++) {
-        const utama = document.getElementById(`utama${i}`).value.trim();
-        const cta = document.getElementById(`cta${i}`).value.trim();
+        const atas = document.getElementById(`atas${i}`).value.trim();
+        const tengah = document.getElementById(`tengah${i}`).value.trim();
         const bawah = document.getElementById(`bawah${i}`).value.trim();
         const bgColor = document.getElementById(`bgcolor${i}`).value;
         const bgOpacity = document.getElementById(`bgopacity${i}`).value;
         
-        if (utama !== '' || cta !== '' || bawah !== '') {
-            activeSlidesData.push({ utama, cta, bawah, bgColor, bgOpacity });
+        if (atas !== '' || tengah !== '' || bawah !== '') {
+            activeSlidesData.push({ atas, tengah, bawah, bgColor, bgOpacity });
         }
     }
 
@@ -129,15 +130,14 @@ generateBtn.addEventListener('click', () => {
         }
 
         const centerWrapper = document.createElement('div');
-        // FIX: Menambahkan margin-bottom agar defaultnya terangkat ke atas untuk keseimbangan visual
         centerWrapper.style.cssText = 'flex: 1; display: flex; flex-direction: column; justify-content: center; width: 100%; z-index: 2; position: relative; margin-bottom: 60px;';
 
-        if(data.utama) centerWrapper.innerHTML += `<div class="teks-utama editable-text swiper-no-swiping" contenteditable="true" data-pos-y="0">${data.utama.replace(/\n/g, '<br>')}</div>`;
-        if(data.cta) centerWrapper.innerHTML += `<div class="teks-cta editable-text swiper-no-swiping" contenteditable="true" data-pos-y="0">${data.cta}</div>`;
+        if(data.atas) centerWrapper.innerHTML += `<div class="teks-atas editable-text swiper-no-swiping" contenteditable="true" data-pos-y="0">${data.atas}</div>`;
+        if(data.tengah) centerWrapper.innerHTML += `<div class="teks-tengah editable-text swiper-no-swiping" contenteditable="true" data-pos-y="0">${data.tengah.replace(/\n/g, '<br>')}</div>`;
         
         slide.appendChild(centerWrapper);
         
-                if(data.bawah) {
+        if(data.bawah) {
             const bawahEl = document.createElement('div');
             bawahEl.className = 'teks-bawah editable-text swiper-no-swiping';
             bawahEl.contentEditable = "true";
@@ -146,20 +146,18 @@ generateBtn.addEventListener('click', () => {
             
             bawahEl.style.position = 'absolute';
             bawahEl.style.zIndex = '999';
-            // Menyamakan lebar dengan batas padding 40px
-            bawahEl.style.left = '40px'; 
+            bawahEl.style.left = '40px';
             bawahEl.style.right = '40px';
             bawahEl.style.bottom = '35px';
             bawahEl.style.boxSizing = 'border-box';
-            // Menghapus max-width agar tidak sempit
-            bawahEl.style.maxWidth = 'none'; 
+            bawahEl.style.maxWidth = 'none';
             bawahEl.style.width = 'auto';
             bawahEl.style.textAlign = 'center';
             bawahEl.style.margin = '0 auto';
             bawahEl.style.wordWrap = 'break-word';
 
             slide.appendChild(bawahEl);
-                }
+        }
         
         const footerLeft = document.createElement('div');
         footerLeft.className = 'footer-action share-action editable-text swiper-no-swiping';
@@ -214,7 +212,6 @@ carouselContent.addEventListener('click', (e) => {
             document.getElementById('input-color').value = hex;
         }
 
-        // Sinkronisasi Slider Posisi
         const currentY = activeEl.getAttribute('data-pos-y') || 0;
         posSlider.value = currentY;
 
@@ -235,7 +232,7 @@ document.getElementById('btn-format-upper').addEventListener('mousedown', (e) =>
     if (selection.toString().length > 0) document.execCommand('insertText', false, selection.toString().toUpperCase());
 });
 
-// KONTROL POSISI VERTIKAL (Slider Baru)
+// KONTROL POSISI VERTIKAL
 posSlider.addEventListener('input', (e) => {
     if(!activeEl) return;
     const val = e.target.value;
