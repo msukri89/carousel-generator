@@ -35,7 +35,7 @@
         </div>
 
         <div id="review-screen" class="screen">
-            <p class="subtitle">Ketuk teks pada slide untuk mengubah gaya</p>
+            <p class="subtitle">Sentuh & Geser Teks untuk memindahkannya</p>
             
             <div class="global-settings" style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); padding: 10px 15px; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.04);">
                 <label style="font-size: 13px; font-weight: 700; color: var(--text-muted);">Ukuran Canvas</label>
@@ -57,87 +57,60 @@
                 </div>
             </div>
 
-            <div id="style-panel" class="hidden">
-                
-                <!-- FITUR GESER POSISI: Dipindah ke urutan paling atas -->
-                <div class="style-row" style="margin-bottom: 10px;">
-                    <div class="style-group" style="flex: 1;">
-                        <label>Geser Posisi Teks (Atas/Bawah)</label>
-                        <input type="range" id="input-pos-y" min="-200" max="200" value="0" style="width: 100%; margin-top: 5px;">
-                    </div>
-                </div>
-
-                <div class="style-row" style="margin-bottom: 10px;">
-                    <div class="style-group">
-                        <label>Format Kata (Blok Teks Dulu)</label>
-                        <div class="btn-group">
-                            <button id="btn-format-bold" style="font-weight: 900;">B</button>
-                            <button id="btn-format-italic" style="font-style: italic; font-family: serif;">I</button>
-                            <button id="btn-format-upper">AA</button>
-                            <button id="btn-format-cali" style="font-family: 'Dancing Script', cursive;">Cal</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="style-row">
-                    <div class="style-group">
-                        <label>Ukuran Teks</label>
-                        <div class="btn-group">
-                            <button id="btn-size-down">A-</button>
-                            <button id="btn-size-up">A+</button>
-                        </div>
-                    </div>
-                    <div class="style-group">
-                        <label>Jarak Baris</label>
-                        <div class="btn-group">
-                            <button id="btn-lh-down">↕-</button>
-                            <button id="btn-lh-up">↕+</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="style-row">
-                    <div class="style-group">
-                        <label>Jenis Font (Blok Aktif)</label>
-                        <select id="select-font" class="style-select">
-                            <option value="'Gilroy', sans-serif">Gilroy (Default)</option>
-                            <option value="'Dancing Script', cursive">Calligraphy</option>
-                        </select>
-                    </div>
-                    <div class="style-group">
-                        <label>Ketebalan (Gilroy)</label>
-                        <select id="select-weight" class="style-select">
-                            <option value="900">Heavy</option>
-                            <option value="700">Bold</option>
-                            <option value="600">Semi Bold</option>
-                            <option value="500">Medium</option>
-                            <option value="400">Regular</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="style-row">
-                    <div class="style-group">
-                        <label>Rata Teks</label>
-                        <div class="btn-group">
-                            <button id="btn-align-left">Kiri</button>
-                            <button id="btn-align-center">Tengah</button>
-                            <button id="btn-align-right">Kanan</button>
-                        </div>
-                    </div>
-                    <div class="style-group">
-                        <label>Warna</label>
-                        <input type="color" id="input-color" value="#1C1C1E" class="color-picker">
-                    </div>
-                </div>
-
-            </div>
-
             <div class="action-buttons">
                 <button id="back-btn" class="ios-btn secondary">Kembali</button>
                 <button id="download-btn" class="ios-btn primary">Download Semua</button>
             </div>
         </div>
+    </div>
+
+    <!-- FITUR BARU: Floating Toolbar (In-line Edit Menu) -->
+    <div id="floating-toolbar" class="hidden">
+        <div class="toolbar-header">
+            <span style="font-size: 11px; font-weight: 800; color: var(--text-muted); letter-spacing: 0.5px;">EDITOR TEKS</span>
+            <button id="close-toolbar" style="background: transparent; border: none; font-size: 20px; color: var(--text-muted); cursor: pointer;">&times;</button>
+        </div>
+        
+        <div class="toolbar-row">
+            <div class="btn-group" style="flex: 1;">
+                <button id="btn-format-bold" style="font-weight: 900;">B</button>
+                <button id="btn-format-italic" style="font-style: italic; font-family: serif;">I</button>
+                <button id="btn-format-upper">AA</button>
+                <button id="btn-format-cali" style="font-family: 'Dancing Script', cursive;">Cal</button>
+            </div>
+            <input type="color" id="input-color" value="#1C1C1E" class="color-picker" style="width: 40px;">
+        </div>
+
+        <div class="toolbar-row">
+            <div class="btn-group" style="flex: 1;">
+                <button id="btn-size-down">A-</button>
+                <button id="btn-size-up">A+</button>
+            </div>
+            <div class="btn-group" style="flex: 1;">
+                <button id="btn-align-left">Kiri</button>
+                <button id="btn-align-center">Tengah</button>
+                <button id="btn-align-right">Kanan</button>
+            </div>
+        </div>
+        
+        <div class="toolbar-row">
+            <select id="select-font" class="style-select" style="flex: 1; padding: 6px;">
+                <option value="'Gilroy', sans-serif">Gilroy (Default)</option>
+                <option value="'Dancing Script', cursive">Calligraphy</option>
+            </select>
+            <select id="select-weight" class="style-select" style="flex: 1; padding: 6px;">
+                <option value="900">Heavy</option>
+                <option value="700">Bold</option>
+                <option value="600">Semi Bold</option>
+                <option value="500">Medium</option>
+                <option value="400">Regular</option>
+            </select>
+        </div>
+
+        <!-- FITUR BARU: Terapkan Ke Semua -->
+        <button id="btn-apply-all" class="ios-btn primary" style="padding: 10px; font-size: 13px; margin-top: 5px;">
+            ✨ Terapkan Gaya & Posisi ke Semua Slide
+        </button>
     </div>
 
     <!-- Toast UI -->
