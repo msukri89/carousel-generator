@@ -18,13 +18,7 @@
     --merah-bata: #C44D48;
 }
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: 'Gilroy', -apple-system, BlinkMacSystemFont, sans-serif;
-}
-
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Gilroy', -apple-system, BlinkMacSystemFont, sans-serif; }
 body { background-color: var(--bg-color); color: var(--text-main); display: flex; justify-content: center; padding: 15px; }
 .app-container { width: 100%; max-width: 420px; padding-bottom: 30px; }
 header h1 { font-size: 28px; font-weight: 900; text-align: center; margin-bottom: 5px; margin-top: 10px; }
@@ -49,44 +43,64 @@ textarea.input-field { height: 70px; resize: none; }
 .swiper-slide { position: relative; background-color: transparent; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 50px 40px; text-align: center; }
 .slide-bg-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 1; }
 
-/* Teks yang bisa diedit */
+/* Teks Editable & Drag UI */
 .editable-text {
     z-index: 2;
     width: 100%;
     word-wrap: break-word;
     outline: none;
-    transition: box-shadow 0.2s;
     border-radius: 8px;
     padding: 4px;
     font-family: 'Gilroy', -apple-system, BlinkMacSystemFont, sans-serif; 
+    transition: box-shadow 0.2s; /* Hanya hilangkan transisi transform agar drag mulus */
 }
 .editable-text.active-edit { box-shadow: 0 0 0 2px var(--blue-ios); background: rgba(0, 122, 255, 0.05); }
 
-/* Struktur Teks Baru Sesuai Hierarki */
+/* Struktur Teks */
 .teks-atas { font-size: 16px; font-weight: 700; color: var(--merah-bata); margin-bottom: 10px; text-align: center; }
 .teks-tengah { font-size: 34px; font-weight: 900; line-height: 1.15; color: var(--text-main); margin-bottom: 15px; text-align: center; }
 .teks-bawah { position: absolute; bottom: 35px; left: 40px; right: 40px; width: auto; font-size: 14px; font-weight: 400; color: var(--text-muted); text-align: center; z-index: 999; box-sizing: border-box; margin: 0 auto; word-wrap: break-word; }
 
-/* FITUR BARU: Footer Action (Share & Save) */
+/* Footer Action (Share & Save) */
 .footer-action { position: absolute; bottom: 33px; display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: var(--text-main); z-index: 999; cursor: pointer; }
 .footer-action.editable-text { width: auto; }
 .share-action { left: 30px; }
 .save-action { right: 30px; }
 
-/* Panel Kontrol Style */
-#style-panel { background: var(--card-bg); border-radius: 16px; padding: 16px; margin-top: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column; gap: 12px; }
-#style-panel.hidden { display: none; }
-.style-row { display: flex; justify-content: space-between; gap: 10px; }
-.style-group { flex: 1; display: flex; flex-direction: column; gap: 6px; }
-.style-group label { font-size: 12px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
-.btn-group { display: flex; border: 1px solid #E5E5EA; border-radius: 8px; overflow: hidden; }
-.btn-group button { flex: 1; padding: 8px; border: none; background: #FAFAFC; font-weight: 700; color: var(--text-main); cursor: pointer; border-right: 1px solid #E5E5EA; }
-.btn-group button:last-child { border-right: none; }
-.btn-group button:active { background: #E5E5EA; }
-.style-select { padding: 8px; border-radius: 8px; border: 1px solid #E5E5EA; background: #FAFAFC; font-family: 'Gilroy', sans-serif; font-weight: 600; outline: none; }
-.color-picker { width: 100%; height: 36px; border: none; border-radius: 8px; cursor: pointer; background: transparent; }
+/* FITUR BARU: Floating Toolbar Styling */
+#floating-toolbar {
+    position: fixed;
+    z-index: 10000;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 14px;
+    padding: 12px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    width: 90%;
+    max-width: 380px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    /* Mulai dari tengah secara default (JS akan mengatur top/bottom nanti) */
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 1;
+    transition: opacity 0.2s ease, top 0.2s ease;
+}
+#floating-toolbar.hidden { opacity: 0; pointer-events: none; }
+.toolbar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px; }
+.toolbar-row { display: flex; justify-content: space-between; gap: 8px; width: 100%; }
 
-/* Buttons */
+/* Komponen dalam Toolbar */
+.btn-group { display: flex; border: 1px solid #E5E5EA; border-radius: 8px; overflow: hidden; background: #FAFAFC; }
+.btn-group button { flex: 1; padding: 6px; border: none; background: transparent; font-weight: 700; color: var(--text-main); cursor: pointer; border-right: 1px solid #E5E5EA; font-size: 13px; }
+.btn-group button:last-child { border-right: none; }
+.btn-group button:active { background: #EAEAEA; }
+.style-select { padding: 6px; border-radius: 8px; border: 1px solid #E5E5EA; background: #FAFAFC; font-family: 'Gilroy', sans-serif; font-weight: 600; font-size: 12px; outline: none; }
+.color-picker { height: 100%; border: none; border-radius: 8px; cursor: pointer; background: transparent; }
+
+/* Buttons Default */
 .action-buttons { display: flex; gap: 10px; margin-top: 15px; }
 .ios-btn { flex: 1; padding: 14px; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
 .ios-btn.primary { background-color: var(--blue-ios); color: white; }
