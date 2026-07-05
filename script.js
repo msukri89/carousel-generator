@@ -168,14 +168,26 @@ generateBtn.addEventListener('click', () => {
         noSwipingClass: 'swiper-no-swiping'
     });
     
-    // Sembunyikan toolbar jika user men-swipe/menggeser slide
     swiperInstance.on('slideChange', () => { hideFloatingToolbar(); });
 });
 
-// ================= FITUR GESER SENTUH (DRAG & DROP) & TOOLBAR MELAYANG =================
+// ================= FITUR GESER SENTUH (DRAG & DROP) =================
 let isDragging = false;
 let startX, startY;
 let currentTransformX = 0, currentTransformY = 0;
+
+// Membuat Garis Panduan (Guidelines) untuk Indikator Magnet Posisi Tengah
+const carouselWrapper = document.querySelector('.carousel-wrapper');
+carouselWrapper.style.position = 'relative'; // Memastikan garis panduan ada di dalam canvas
+
+const guideVertical = document.createElement('div');
+guideVertical.style.cssText = 'position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background: var(--blue-ios); z-index: 9999; display: none; transform: translateX(-50%); pointer-events: none; box-shadow: 0 0 5px rgba(255,255,255,0.5);';
+
+const guideHorizontal = document.createElement('div');
+guideHorizontal.style.cssText = 'position: absolute; top: 50%; left: 0; right: 0; height: 2px; background: var(--blue-ios); z-index: 9999; display: none; transform: translateY(-50%); pointer-events: none; box-shadow: 0 0 5px rgba(255,255,255,0.5);';
+
+carouselWrapper.appendChild(guideVertical);
+carouselWrapper.appendChild(guideHorizontal);
 
 function hideFloatingToolbar() {
     floatingToolbar.classList.add('hidden');
@@ -188,14 +200,12 @@ function showFloatingToolbar(el) {
     const rect = el.getBoundingClientRect();
     const toolbarHeight = floatingToolbar.offsetHeight || 180;
     
-    // Kalkulasi posisi Toolbar agar pas di atas/bawah teks
     let topPos = rect.top - toolbarHeight - 15;
-    if (topPos < 10) { // Jika nabrak batas atas layar, pindah ke bawah teks
+    if (topPos < 10) { 
         topPos = rect.bottom + 15;
     }
     floatingToolbar.style.top = `${topPos}px`;
     
-    // Sinkronisasi data toolbar dengan CSS element yang aktif
     const computedStyle = window.getComputedStyle(el);
     document.getElementById('select-weight').value = computedStyle.fontWeight;
     
@@ -214,7 +224,6 @@ function showFloatingToolbar(el) {
 
 closeToolbarBtn.addEventListener('click', hideFloatingToolbar);
 
-// Event Listeners untuk interaksi langsung di Kanvas
 carouselContent.addEventListener('touchstart', dragStart, { passive: false });
 carouselContent.addEventListener('touchmove', drag, { passive: false });
 carouselContent.addEventListener('touchend', dragEnd);
@@ -225,7 +234,6 @@ document.addEventListener('mouseup', dragEnd);
 function dragStart(e) {
     const target = e.target.closest('.editable-text');
     
-    // Jika tap di area luar teks, sembunyikan toolbar
     if (!target && !e.target.closest('#floating-toolbar')) {
         hideFloatingToolbar();
         return;
@@ -239,7 +247,6 @@ function dragStart(e) {
         activeEl.classList.add('active-edit');
         isDragging = true;
         
-        // Ambil koordinat awal sentuhan
         if (e.type === 'touchstart') {
             startX = e.touches[0].clientX;
             startY = e.touches[0].clientY;
@@ -248,11 +255,9 @@ function dragStart(e) {
             startY = e.clientY;
         }
         
-        // Baca posisi geseran saat ini dari custom attribute (agar presisi dan terbaca html2canvas)
         currentTransformX = parseFloat(activeEl.getAttribute('data-x')) || 0;
         currentTransformY = parseFloat(activeEl.getAttribute('data-y')) || 0;
         
-        // Sembunyikan toolbar sementara saat teks sedang digeser agar tidak menghalangi
         floatingToolbar.classList.add('hidden');
     }
 }
@@ -267,38 +272,55 @@ function drag(e) {
     } else {
         clientX = e.clientX;
         clientY = e.clientY;
-        e.preventDefault(); // Mencegah teks terblokir secara tidak sengaja saat mouse drag
+        e.preventDefault(); 
     }
     
     const dx = clientX - startX;
     const dy = clientY - startY;
     
-    // Pindahkan elemen secara langsung (*real-time*)
-    activeEl.style.transform = `translate(${currentTransformX + dx}px, ${currentTransformY + dy}px)`;
+    // Fitur Magnet/Snap ke Tengah (Toleransi 20px agar lebih terasa)
+    let finalX = currentTransformX + dx;
+    let finalY = currentTransformY + dy;
+    const snapThreshold = 20;
+    
+    let isSnappedX = false;
+    let isSnappedY = false;
+
+    if (Math.abs(finalX) < snapThreshold) {
+        finalX = 0;
+        isSnappedX = true;
+    }
+    if (Math.abs(finalY) < snapThreshold) {
+        finalY = 0;
+        isSnappedY = true;
+    }
+
+    // Tampilkan garis bantu jika nempel ke tengah (snap aktif)
+    guideVertical.style.display = isSnappedX ? 'block' : 'none';
+    guideHorizontal.style.display = isSnappedY ? 'block' : 'none';
+
+    activeEl.style.transform = `translate(${finalX}px, ${finalY}px)`;
+    
+    // Simpan posisi sementara saat ditarik
+    activeEl.dataset.tempX = finalX;
+    activeEl.dataset.tempY = finalY;
 }
 
 function dragEnd(e) {
     if (!isDragging || !activeEl) return;
     isDragging = false;
     
-    // Kalkulasi jarak akhir saat jari dilepas
-    let clientX, clientY;
-    if (e.type === 'touchend') {
-        clientX = e.changedTouches[0].clientX;
-        clientY = e.changedTouches[0].clientY;
-    } else {
-        clientX = e.clientX;
-        clientY = e.clientY;
-    }
+    // Hilangkan garis bantu saat jari/kursor dilepas
+    guideVertical.style.display = 'none';
+    guideHorizontal.style.display = 'none';
     
-    const finalX = currentTransformX + (clientX - startX);
-    const finalY = currentTransformY + (clientY - startY);
+    // Simpan posisi permanen yang sudah terkena magnet
+    const finalX = parseFloat(activeEl.dataset.tempX) || 0;
+    const finalY = parseFloat(activeEl.dataset.tempY) || 0;
     
-    // Simpan posisi terbaru
     activeEl.setAttribute('data-x', finalX);
     activeEl.setAttribute('data-y', finalY);
     
-    // Tampilkan toolbar kembali di posisi yang baru
     showFloatingToolbar(activeEl);
 }
 
@@ -306,7 +328,6 @@ function dragEnd(e) {
 document.getElementById('btn-apply-all').addEventListener('click', () => {
     if(!activeEl) return;
     
-    // Identifikasi kelas/jenis teks apa yang sedang diedit (Atas/Tengah/Bawah/Share/Save)
     let targetClass = '';
     const classes = ['teks-atas', 'teks-tengah', 'teks-bawah', 'share-action', 'save-action'];
     classes.forEach(c => { if(activeEl.classList.contains(c)) targetClass = c; });
@@ -318,60 +339,77 @@ document.getElementById('btn-apply-all').addEventListener('click', () => {
         
         allTargets.forEach(el => {
             if (el !== activeEl) {
-                // Copy semua style visual
+                // Terapkan semua gaya desain
                 el.style.fontSize = activeEl.style.fontSize;
-                el.style.lineHeight = activeEl.style.lineHeight;
                 el.style.fontWeight = activeEl.style.fontWeight;
                 el.style.fontFamily = activeEl.style.fontFamily;
                 el.style.color = activeEl.style.color;
                 el.style.textAlign = activeEl.style.textAlign;
+                el.style.fontStyle = activeEl.style.fontStyle;
+                el.style.textTransform = activeEl.style.textTransform;
                 
-                // Copy posisi (transform)
+                // Terapkan posisi kordinat
                 el.setAttribute('data-x', currentX);
                 el.setAttribute('data-y', currentY);
                 el.style.transform = `translate(${currentX}px, ${currentY}px)`;
             }
         });
         
-        // Memaksa hilangkan status drag toolbar setelah diklik
         const originalBtnText = document.getElementById('btn-apply-all').innerText;
         document.getElementById('btn-apply-all').innerText = "✅ Diterapkan!";
         setTimeout(() => { document.getElementById('btn-apply-all').innerText = originalBtnText; }, 1500);
     }
 });
-// =========================================================================
 
-// Kontrol Teks Blok (Rich Text Formatting)
-document.getElementById('btn-format-bold').addEventListener('mousedown', (e) => { e.preventDefault(); document.execCommand('bold', false, null); });
-document.getElementById('btn-format-italic').addEventListener('mousedown', (e) => { e.preventDefault(); document.execCommand('italic', false, null); });
-document.getElementById('btn-format-cali').addEventListener('mousedown', (e) => { e.preventDefault(); document.execCommand('fontName', false, 'Dancing Script, cursive'); });
-document.getElementById('btn-format-upper').addEventListener('mousedown', (e) => {
+// ================= KONTROL TOOLBAR (SUDAH DIPERBAIKI) =================
+document.getElementById('btn-format-bold').addEventListener('click', (e) => { 
     e.preventDefault();
-    const selection = window.getSelection();
-    if (selection.toString().length > 0) document.execCommand('insertText', false, selection.toString().toUpperCase());
+    if(!activeEl) return;
+    const currentWeight = window.getComputedStyle(activeEl).fontWeight;
+    activeEl.style.fontWeight = (currentWeight === '700' || currentWeight === '900' || currentWeight === 'bold') ? '400' : '700';
+    document.getElementById('select-weight').value = activeEl.style.fontWeight;
 });
 
-// Kontrol Toolbar
+document.getElementById('btn-format-italic').addEventListener('click', (e) => { 
+    e.preventDefault();
+    if(!activeEl) return;
+    const currentStyle = window.getComputedStyle(activeEl).fontStyle;
+    activeEl.style.fontStyle = currentStyle === 'italic' ? 'normal' : 'italic';
+});
+
+document.getElementById('btn-format-cali').addEventListener('click', (e) => { 
+    e.preventDefault();
+    if(!activeEl) return;
+    activeEl.style.fontFamily = "'Dancing Script', cursive";
+    document.getElementById('select-font').value = "'Dancing Script', cursive";
+});
+
+document.getElementById('btn-format-upper').addEventListener('click', (e) => {
+    e.preventDefault();
+    if(!activeEl) return;
+    const currentTransform = window.getComputedStyle(activeEl).textTransform;
+    activeEl.style.textTransform = currentTransform === 'uppercase' ? 'none' : 'uppercase';
+});
+
+// Ukuran Teks
 document.getElementById('btn-size-up').addEventListener('click', () => {
     if(!activeEl) return; let size = parseFloat(window.getComputedStyle(activeEl).fontSize); activeEl.style.fontSize = (size + 2) + 'px';
 });
 document.getElementById('btn-size-down').addEventListener('click', () => {
     if(!activeEl) return; let size = parseFloat(window.getComputedStyle(activeEl).fontSize); activeEl.style.fontSize = (size - 2) + 'px';
 });
-document.getElementById('btn-lh-up').addEventListener('click', () => {
-    if(!activeEl) return; let lh = parseFloat(window.getComputedStyle(activeEl).lineHeight); activeEl.style.lineHeight = (lh + 2) + 'px';
-});
-document.getElementById('btn-lh-down').addEventListener('click', () => {
-    if(!activeEl) return; let lh = parseFloat(window.getComputedStyle(activeEl).lineHeight); activeEl.style.lineHeight = (lh - 2) + 'px';
-});
+
+// Jenis Font, Ketebalan, dan Warna
 document.getElementById('select-weight').addEventListener('change', (e) => { if(!activeEl) return; activeEl.style.fontWeight = e.target.value; });
 document.getElementById('select-font').addEventListener('change', (e) => { if(!activeEl) return; activeEl.style.fontFamily = e.target.value; });
 document.getElementById('input-color').addEventListener('input', (e) => { if(!activeEl) return; activeEl.style.color = e.target.value; });
 
+// Rata Kanan Kiri (Alignment)
 document.getElementById('btn-align-left').addEventListener('click', () => { if(!activeEl) return; activeEl.style.textAlign = 'left'; });
 document.getElementById('btn-align-center').addEventListener('click', () => { if(!activeEl) return; activeEl.style.textAlign = 'center'; });
 document.getElementById('btn-align-right').addEventListener('click', () => { if(!activeEl) return; activeEl.style.textAlign = 'right'; });
 
+// ================= DOWNLOAD & LAINNYA =================
 document.getElementById('select-ratio').addEventListener('change', (e) => {
     const wrapper = document.querySelector('.carousel-wrapper');
     wrapper.style.aspectRatio = e.target.value;
@@ -386,7 +424,6 @@ backBtn.addEventListener('click', () => {
 
 downloadBtn.addEventListener('click', async () => {
     hideFloatingToolbar();
-
     downloadBtn.innerText = 'Memproses... ⏳';
     downloadBtn.disabled = true;
     
