@@ -8,24 +8,22 @@ const slideInputsContainer = document.getElementById('slide-inputs-container');
 const addSlideBtn = document.getElementById('add-slide-btn');
 const bgInput = document.getElementById('bg-input');
 const uploadText = document.getElementById('upload-text');
-const stylePanel = document.getElementById('style-panel');
-const posSlider = document.getElementById('input-pos-y');
+const floatingToolbar = document.getElementById('floating-toolbar');
+const closeToolbarBtn = document.getElementById('close-toolbar');
 
 let swiperInstance = null;
 let bgImageUrl = '';
 let activeEl = null; 
 let totalInputCards = 0; 
 
-// ================= FITUR 1: DOUBLE BACK UNTUK EXIT =================
+// ================= FITUR DOUBLE BACK =================
 let backPressTime = 0;
 const exitToast = document.getElementById('exit-toast');
 history.pushState(null, null, location.href);
-
 window.addEventListener('popstate', (e) => {
     const currentTime = new Date().getTime();
-    if (currentTime - backPressTime < 2000) {
-        history.back(); 
-    } else {
+    if (currentTime - backPressTime < 2000) { history.back(); } 
+    else {
         e.preventDefault();
         history.pushState(null, null, location.href);
         backPressTime = currentTime;
@@ -63,11 +61,11 @@ function createSlideInput() {
         
         <div style="display: flex; gap: 15px; align-items: center; padding: 10px; background: #FAFAFC; border-radius: 8px; border: 1px solid #E5E5EA; margin-bottom: 5px;">
             <div style="display: flex; flex-direction: column; gap: 5px;">
-                <label style="font-size: 11px; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Warna Panel</label>
+                <label style="font-size: 11px; color: var(--text-muted); font-weight: 700;">WARNA PANEL</label>
                 <input type="color" id="bgcolor${totalInputCards}" value="#FFFFFF" style="width: 50px; height: 30px; border: none; cursor: pointer; background: transparent; padding: 0;">
             </div>
             <div style="display: flex; flex-direction: column; gap: 5px; flex: 1;">
-                <label style="font-size: 11px; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Transparansi Overlay</label>
+                <label style="font-size: 11px; color: var(--text-muted); font-weight: 700;">TRANSPARANSI OVERLAY</label>
                 <input type="range" id="bgopacity${totalInputCards}" min="0" max="1" step="0.05" value="0.5" style="width: 100%;">
             </div>
         </div>
@@ -76,9 +74,9 @@ function createSlideInput() {
 }
 
 for (let i = 0; i < 5; i++) { createSlideInput(); }
-
 addSlideBtn.addEventListener('click', () => { createSlideInput(); });
 
+// ================= GENERATE SLIDES =================
 generateBtn.addEventListener('click', () => {
     carouselContent.innerHTML = '';
     let activeSlidesData = [];
@@ -95,11 +93,7 @@ generateBtn.addEventListener('click', () => {
         }
     }
 
-    if(activeSlidesData.length === 0) {
-        alert("Isi minimal 1 slide terlebih dahulu!");
-        return;
-    }
-
+    if(activeSlidesData.length === 0) { alert("Isi minimal 1 slide terlebih dahulu!"); return; }
     const totalSlides = activeSlidesData.length;
 
     activeSlidesData.forEach((data, index) => {
@@ -132,8 +126,8 @@ generateBtn.addEventListener('click', () => {
         const centerWrapper = document.createElement('div');
         centerWrapper.style.cssText = 'flex: 1; display: flex; flex-direction: column; justify-content: center; width: 100%; z-index: 2; position: relative; margin-bottom: 60px;';
 
-        if(data.atas) centerWrapper.innerHTML += `<div class="teks-atas editable-text swiper-no-swiping" contenteditable="true" data-pos-y="0">${data.atas}</div>`;
-        if(data.tengah) centerWrapper.innerHTML += `<div class="teks-tengah editable-text swiper-no-swiping" contenteditable="true" data-pos-y="0">${data.tengah.replace(/\n/g, '<br>')}</div>`;
+        if(data.atas) centerWrapper.innerHTML += `<div class="teks-atas editable-text swiper-no-swiping" contenteditable="true" data-x="0" data-y="0">${data.atas}</div>`;
+        if(data.tengah) centerWrapper.innerHTML += `<div class="teks-tengah editable-text swiper-no-swiping" contenteditable="true" data-x="0" data-y="0">${data.tengah.replace(/\n/g, '<br>')}</div>`;
         
         slide.appendChild(centerWrapper);
         
@@ -142,32 +136,20 @@ generateBtn.addEventListener('click', () => {
             bawahEl.className = 'teks-bawah editable-text swiper-no-swiping';
             bawahEl.contentEditable = "true";
             bawahEl.innerHTML = data.bawah;
-            bawahEl.setAttribute('data-pos-y', '0');
-            
-            bawahEl.style.position = 'absolute';
-            bawahEl.style.zIndex = '999';
-            bawahEl.style.left = '40px';
-            bawahEl.style.right = '40px';
-            bawahEl.style.bottom = '35px';
-            bawahEl.style.boxSizing = 'border-box';
-            bawahEl.style.maxWidth = 'none';
-            bawahEl.style.width = 'auto';
-            bawahEl.style.textAlign = 'center';
-            bawahEl.style.margin = '0 auto';
-            bawahEl.style.wordWrap = 'break-word';
-
+            bawahEl.setAttribute('data-x', '0');
+            bawahEl.setAttribute('data-y', '0');
             slide.appendChild(bawahEl);
         }
         
         const footerLeft = document.createElement('div');
         footerLeft.className = 'footer-action share-action editable-text swiper-no-swiping';
-        footerLeft.setAttribute('data-pos-y', '0');
+        footerLeft.setAttribute('data-x', '0'); footerLeft.setAttribute('data-y', '0');
         footerLeft.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg><span>SHARE</span>`;
         slide.appendChild(footerLeft);
 
         const footerRight = document.createElement('div');
         footerRight.className = 'footer-action save-action editable-text swiper-no-swiping';
-        footerRight.setAttribute('data-pos-y', '0');
+        footerRight.setAttribute('data-x', '0'); footerRight.setAttribute('data-y', '0');
         footerRight.innerHTML = `<span>SAVE</span><svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>`;
         slide.appendChild(footerRight);
 
@@ -185,44 +167,181 @@ generateBtn.addEventListener('click', () => {
         noSwiping: true,
         noSwipingClass: 'swiper-no-swiping'
     });
+    
+    // Sembunyikan toolbar jika user men-swipe/menggeser slide
+    swiperInstance.on('slideChange', () => { hideFloatingToolbar(); });
 });
 
-// LOGIKA EDITOR CANVAS
-carouselContent.addEventListener('click', (e) => {
-    const targetText = e.target.closest('.editable-text');
+// ================= FITUR GESER SENTUH (DRAG & DROP) & TOOLBAR MELAYANG =================
+let isDragging = false;
+let startX, startY;
+let currentTransformX = 0, currentTransformY = 0;
 
-    if (targetText) {
-        if (activeEl) activeEl.classList.remove('active-edit');
-        activeEl = targetText;
-        activeEl.classList.add('active-edit');
-        stylePanel.classList.remove('hidden');
+function hideFloatingToolbar() {
+    floatingToolbar.classList.add('hidden');
+    if (activeEl) activeEl.classList.remove('active-edit');
+    activeEl = null;
+}
 
-        const computedStyle = window.getComputedStyle(activeEl);
-        document.getElementById('select-weight').value = computedStyle.fontWeight;
-        
-        if(computedStyle.fontFamily.includes('Dancing Script')) {
-            document.getElementById('select-font').value = "'Dancing Script', cursive";
-        } else {
-            document.getElementById('select-font').value = "'Gilroy', sans-serif";
-        }
-        
-        const rgb = computedStyle.color.match(/\d+/g);
-        if(rgb) {
-            const hex = `#${((1 << 24) + (+rgb[0] << 16) + (+rgb[1] << 8) + +rgb[2]).toString(16).slice(1)}`;
-            document.getElementById('input-color').value = hex;
-        }
-
-        const currentY = activeEl.getAttribute('data-pos-y') || 0;
-        posSlider.value = currentY;
-
+function showFloatingToolbar(el) {
+    floatingToolbar.classList.remove('hidden');
+    const rect = el.getBoundingClientRect();
+    const toolbarHeight = floatingToolbar.offsetHeight || 180;
+    
+    // Kalkulasi posisi Toolbar agar pas di atas/bawah teks
+    let topPos = rect.top - toolbarHeight - 15;
+    if (topPos < 10) { // Jika nabrak batas atas layar, pindah ke bawah teks
+        topPos = rect.bottom + 15;
+    }
+    floatingToolbar.style.top = `${topPos}px`;
+    
+    // Sinkronisasi data toolbar dengan CSS element yang aktif
+    const computedStyle = window.getComputedStyle(el);
+    document.getElementById('select-weight').value = computedStyle.fontWeight;
+    
+    if(computedStyle.fontFamily.includes('Dancing Script')) {
+        document.getElementById('select-font').value = "'Dancing Script', cursive";
     } else {
-        if (activeEl) activeEl.classList.remove('active-edit');
-        activeEl = null;
-        stylePanel.classList.add('hidden');
+        document.getElementById('select-font').value = "'Gilroy', sans-serif";
+    }
+    
+    const rgb = computedStyle.color.match(/\d+/g);
+    if(rgb) {
+        const hex = `#${((1 << 24) + (+rgb[0] << 16) + (+rgb[1] << 8) + +rgb[2]).toString(16).slice(1)}`;
+        document.getElementById('input-color').value = hex;
+    }
+}
+
+closeToolbarBtn.addEventListener('click', hideFloatingToolbar);
+
+// Event Listeners untuk interaksi langsung di Kanvas
+carouselContent.addEventListener('touchstart', dragStart, { passive: false });
+carouselContent.addEventListener('touchmove', drag, { passive: false });
+carouselContent.addEventListener('touchend', dragEnd);
+carouselContent.addEventListener('mousedown', dragStart);
+document.addEventListener('mousemove', drag);
+document.addEventListener('mouseup', dragEnd);
+
+function dragStart(e) {
+    const target = e.target.closest('.editable-text');
+    
+    // Jika tap di area luar teks, sembunyikan toolbar
+    if (!target && !e.target.closest('#floating-toolbar')) {
+        hideFloatingToolbar();
+        return;
+    }
+    
+    if (target) {
+        if (activeEl && activeEl !== target) {
+            activeEl.classList.remove('active-edit');
+        }
+        activeEl = target;
+        activeEl.classList.add('active-edit');
+        isDragging = true;
+        
+        // Ambil koordinat awal sentuhan
+        if (e.type === 'touchstart') {
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+        } else {
+            startX = e.clientX;
+            startY = e.clientY;
+        }
+        
+        // Baca posisi geseran saat ini dari custom attribute (agar presisi dan terbaca html2canvas)
+        currentTransformX = parseFloat(activeEl.getAttribute('data-x')) || 0;
+        currentTransformY = parseFloat(activeEl.getAttribute('data-y')) || 0;
+        
+        // Sembunyikan toolbar sementara saat teks sedang digeser agar tidak menghalangi
+        floatingToolbar.classList.add('hidden');
+    }
+}
+
+function drag(e) {
+    if (!isDragging || !activeEl) return;
+    
+    let clientX, clientY;
+    if (e.type === 'touchmove') {
+        clientX = e.touches[0].clientX;
+        clientY = e.touches[0].clientY;
+    } else {
+        clientX = e.clientX;
+        clientY = e.clientY;
+        e.preventDefault(); // Mencegah teks terblokir secara tidak sengaja saat mouse drag
+    }
+    
+    const dx = clientX - startX;
+    const dy = clientY - startY;
+    
+    // Pindahkan elemen secara langsung (*real-time*)
+    activeEl.style.transform = `translate(${currentTransformX + dx}px, ${currentTransformY + dy}px)`;
+}
+
+function dragEnd(e) {
+    if (!isDragging || !activeEl) return;
+    isDragging = false;
+    
+    // Kalkulasi jarak akhir saat jari dilepas
+    let clientX, clientY;
+    if (e.type === 'touchend') {
+        clientX = e.changedTouches[0].clientX;
+        clientY = e.changedTouches[0].clientY;
+    } else {
+        clientX = e.clientX;
+        clientY = e.clientY;
+    }
+    
+    const finalX = currentTransformX + (clientX - startX);
+    const finalY = currentTransformY + (clientY - startY);
+    
+    // Simpan posisi terbaru
+    activeEl.setAttribute('data-x', finalX);
+    activeEl.setAttribute('data-y', finalY);
+    
+    // Tampilkan toolbar kembali di posisi yang baru
+    showFloatingToolbar(activeEl);
+}
+
+// ================= FITUR TERAPKAN KE SEMUA (APPLY TO ALL) =================
+document.getElementById('btn-apply-all').addEventListener('click', () => {
+    if(!activeEl) return;
+    
+    // Identifikasi kelas/jenis teks apa yang sedang diedit (Atas/Tengah/Bawah/Share/Save)
+    let targetClass = '';
+    const classes = ['teks-atas', 'teks-tengah', 'teks-bawah', 'share-action', 'save-action'];
+    classes.forEach(c => { if(activeEl.classList.contains(c)) targetClass = c; });
+    
+    if(targetClass) {
+        const allTargets = document.querySelectorAll(`.${targetClass}`);
+        const currentX = activeEl.getAttribute('data-x') || 0;
+        const currentY = activeEl.getAttribute('data-y') || 0;
+        
+        allTargets.forEach(el => {
+            if (el !== activeEl) {
+                // Copy semua style visual
+                el.style.fontSize = activeEl.style.fontSize;
+                el.style.lineHeight = activeEl.style.lineHeight;
+                el.style.fontWeight = activeEl.style.fontWeight;
+                el.style.fontFamily = activeEl.style.fontFamily;
+                el.style.color = activeEl.style.color;
+                el.style.textAlign = activeEl.style.textAlign;
+                
+                // Copy posisi (transform)
+                el.setAttribute('data-x', currentX);
+                el.setAttribute('data-y', currentY);
+                el.style.transform = `translate(${currentX}px, ${currentY}px)`;
+            }
+        });
+        
+        // Memaksa hilangkan status drag toolbar setelah diklik
+        const originalBtnText = document.getElementById('btn-apply-all').innerText;
+        document.getElementById('btn-apply-all').innerText = "✅ Diterapkan!";
+        setTimeout(() => { document.getElementById('btn-apply-all').innerText = originalBtnText; }, 1500);
     }
 });
+// =========================================================================
 
-// Kontrol Teks Blok
+// Kontrol Teks Blok (Rich Text Formatting)
 document.getElementById('btn-format-bold').addEventListener('mousedown', (e) => { e.preventDefault(); document.execCommand('bold', false, null); });
 document.getElementById('btn-format-italic').addEventListener('mousedown', (e) => { e.preventDefault(); document.execCommand('italic', false, null); });
 document.getElementById('btn-format-cali').addEventListener('mousedown', (e) => { e.preventDefault(); document.execCommand('fontName', false, 'Dancing Script, cursive'); });
@@ -232,15 +351,7 @@ document.getElementById('btn-format-upper').addEventListener('mousedown', (e) =>
     if (selection.toString().length > 0) document.execCommand('insertText', false, selection.toString().toUpperCase());
 });
 
-// KONTROL POSISI VERTIKAL
-posSlider.addEventListener('input', (e) => {
-    if(!activeEl) return;
-    const val = e.target.value;
-    activeEl.setAttribute('data-pos-y', val);
-    activeEl.style.transform = `translateY(${val}px)`;
-});
-
-// Kontrol Editor Dasar
+// Kontrol Toolbar
 document.getElementById('btn-size-up').addEventListener('click', () => {
     if(!activeEl) return; let size = parseFloat(window.getComputedStyle(activeEl).fontSize); activeEl.style.fontSize = (size + 2) + 'px';
 });
@@ -268,15 +379,13 @@ document.getElementById('select-ratio').addEventListener('change', (e) => {
 });
 
 backBtn.addEventListener('click', () => {
-    if (activeEl) activeEl.classList.remove('active-edit');
-    stylePanel.classList.add('hidden');
+    hideFloatingToolbar();
     reviewScreen.classList.remove('active');
     inputScreen.classList.add('active');
 });
 
 downloadBtn.addEventListener('click', async () => {
-    if (activeEl) activeEl.classList.remove('active-edit');
-    stylePanel.classList.add('hidden');
+    hideFloatingToolbar();
 
     downloadBtn.innerText = 'Memproses... ⏳';
     downloadBtn.disabled = true;
